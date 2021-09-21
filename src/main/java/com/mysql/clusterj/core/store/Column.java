@@ -19,8 +19,8 @@ package com.mysql.clusterj.core.store;
 
 import com.mysql.clusterj.ColumnType;
 
-/** Column metadata for ndb columns.
- *
+/**
+ * Column metadata for ndb columns.
  */
 public interface Column {
 

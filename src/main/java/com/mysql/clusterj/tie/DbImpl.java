@@ -359,7 +359,7 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
         /** Guarantee the size of the string storage buffer to be a minimum size. If the current
          * string storage buffer is not big enough, allocate a bigger one. The current buffer
          * will be garbage collected.
-         * @param size the minimum size required
+         * @param sizeNeeded the minimum size required
          */
         public void guaranteeStringStorageBufferSize(int sizeNeeded) {
             if (sizeNeeded > stringStorageBuffer.capacity()) {
@@ -409,7 +409,7 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
         /** Guarantee the size of the string byte buffer to be a minimum size. If the current
          * string byte buffer is not big enough, allocate a bigger one. The current buffer
          * will be garbage collected.
-         * @param size the minimum size required
+         * @param sizeNeeded the minimum size required
          */
         protected void guaranteeStringByteBufferSize(int sizeNeeded) {
             if (sizeNeeded > stringByteBufferCurrentSize) {
