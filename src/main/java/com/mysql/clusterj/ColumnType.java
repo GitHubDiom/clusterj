@@ -21,7 +21,6 @@ package com.mysql.clusterj;
  *
  */
 public enum ColumnType {
-
     Bigint,          ///< 64 bit. 8 byte signed integer, can be used in array
     Bigunsigned,     ///< 64 Bit. 8 byte signed integer, can be used in array
     Binary,          ///< Length is fixed. A fixed array of 1-byte values

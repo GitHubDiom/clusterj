@@ -22,11 +22,11 @@ public class NdbEventOperationImpl implements EventOperation {
     /** The db for this operation */
     protected DbImpl db;
 
-    private final NdbEventOperationConst ndbEventOperation;
+    private final NdbEventOperation ndbEventOperation;
 
     private final TableEvent eventType;
 
-    public NdbEventOperationImpl(NdbEventOperationConst ndbEventOperation, Db db) {
+    public NdbEventOperationImpl(NdbEventOperation ndbEventOperation, Db db) {
         this.db = (DbImpl)db;
         this.eventType = TableEvent.convert(ndbEventOperation.getEventType());
         this.ndbEventOperation = ndbEventOperation;
@@ -119,6 +119,13 @@ public class NdbEventOperationImpl implements EventOperation {
         return ndbEventOperation.getLatestGCI();
     }
 
+    public void execute() {
+        int returnCode = ndbEventOperation.execute();
+
+        if (returnCode > 0)
+            handleError(returnCode);
+    }
+
     /**
      * Get the latest error.
      */
@@ -130,5 +137,11 @@ public class NdbEventOperationImpl implements EventOperation {
         NdbErrorConst ndbError = getNdbError();
         String detail = db.getNdbErrorDetail(ndbError);
         Utility.throwError(0, ndbError, detail);
+    }
+
+    protected void handleError(int returnCode) {
+        NdbErrorConst ndbError = getNdbError();
+        String detail = db.getNdbErrorDetail(ndbError);
+        Utility.throwError(returnCode, ndbError, detail);
     }
 }
