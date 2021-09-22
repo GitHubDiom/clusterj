@@ -555,6 +555,7 @@ public class NdbDictionary extends Wrapper
         public final native void setUndoBufferSize(int/*_Uint32_*/ sz);
         public final native void setAutoGrowSpecification(AutoGrowSpecificationConst/*_const AutoGrowSpecification &_*/ p0);
     }
+
     public interface TablespaceConst extends ObjectConst
     {
         String/*_const char *_*/ getName() /*_const_*/;

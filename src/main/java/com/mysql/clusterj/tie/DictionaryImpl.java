@@ -18,7 +18,9 @@
 package com.mysql.clusterj.tie;
 
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
+import com.mysql.ndbjtie.ndbapi.NdbDictionary.Event;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.DictionaryConst;
+import com.mysql.ndbjtie.ndbapi.NdbDictionary.EventConst;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.DictionaryConst.ListConst.Element;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.DictionaryConst.ListConst.ElementArray;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.IndexConst;
@@ -134,6 +136,40 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         ndbDictionary.removeCachedTable(tableName);
         // also remove the cached NdbRecord associated with this table
         clusterConnection.unloadSchema(tableName);
+    }
+
+    /**
+     * Create and register an NDB event with the server.
+     *
+     * @param event ClusterJ representation of the event.
+     */
+    public void createAndRegisterEvent(com.mysql.clusterj.core.store.Event event) {
+        Event ndbEvent = new Event();
+        TableConst ndbTable = ndbDictionary.getTable(event.getTableName());
+        ndbEvent.setName(event.getName());
+        ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
+        ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
+        ndbEvent.setTable(ndbTable);
+
+        int returnCode = ndbDictionary.createEvent(ndbEvent);
+
+        handleError(returnCode, ndbDictionary, "");
+    }
+
+    /**
+     * Return the event identified by the given name, if it exists.
+     * @param eventName The unique identifier of the event.
+     * @return The event.
+     */
+    public com.mysql.clusterj.core.store.Event getEvent(String eventName) {
+        EventConst eventConst = ndbDictionary.getEvent(eventName);
+        TableConst ndbTable = eventConst.getTable();
+
+        return new EventImpl(
+                eventConst.getName(),
+                eventConst.getDurability(),
+                eventConst.getReport(),
+                new TableImpl(ndbTable, getIndexNames(ndbTable.getName())));
     }
 
     public Dictionary getNdbDictionary() {

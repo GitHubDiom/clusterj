@@ -29,22 +29,37 @@ public class EventImpl implements Event {
     private final String tableName;
     private final EventDurability eventDurability;
     private final EventReport eventReport;
-    private final int numEventColumns;
+    //private final int numEventColumns;
 
     private final Table table;
 
-    public EventImpl(EventConst ndbEvent, Table table) {
-        this.name = ndbEvent.getName();
-        this.tableName = ndbEvent.getTableName();
-        this.eventDurability = EventDurability.convert(ndbEvent.getDurability());
-        this.eventReport = EventReport.convert(ndbEvent.getReport());
-        this.numEventColumns = ndbEvent.getNoOfEventColumns();
+    /**
+     * The NDB Event that this is wrapping.
+     */
+    //private final EventConst ndbEvent;
 
+    public EventImpl(
+            String eventName,
+            EventDurability eventDurability,
+            EventReport eventReport,
+            Table table) {
+        this.name = eventName;
+        this.tableName = table.getName();
+        this.eventDurability = eventDurability; // EventDurability.convert(ndbEvent.getDurability());
+        this.eventReport = eventReport; //EventReport.convert(ndbEvent.getReport());
+
+        //this.ndbEvent = ndbEvent;
         this.table = table;
-
 
         logger.debug("Created Event: " + this.toString());
     }
+
+    public EventImpl(
+            String eventName,
+            int eventDurability,
+            int eventReport,
+            Table table
+    ) { this(eventName, EventDurability.convert(eventDurability), EventReport.convert(eventReport), table); }
 
     /**
      * Get unique identifier for the event.
@@ -83,17 +98,17 @@ public class EventImpl implements Event {
         return eventDurability;
     }
 
-    public int getReport() {
-        return EventReport.convert(eventReport);
+    public EventReport getReport() {
+        return eventReport;
     }
 
     public int getNoOfEventColumns() {
-        return numEventColumns;
+        return -1;
     }
 
     @Override
     public String toString() {
         return "EventImpl[name=" + name + ", tableName=" + tableName + ", eventDurability=" + eventDurability.name()
-                + ", eventReport=" + eventReport.name() + ", numEventColumns=" + numEventColumns + ", table=" + table;
+                + ", eventReport=" + eventReport.name() + ", table=" + table;
     }
 }

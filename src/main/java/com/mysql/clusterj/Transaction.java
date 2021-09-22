@@ -18,8 +18,8 @@
 
 package com.mysql.clusterj;
 
-/** Transaction represents a user transaction active in the cluster.
- *
+/**
+ * Transaction represents a user transaction active in the cluster.
  */
 public interface Transaction {
 

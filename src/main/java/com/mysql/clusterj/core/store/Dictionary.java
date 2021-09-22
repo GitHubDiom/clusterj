@@ -28,4 +28,7 @@ public interface Dictionary {
 
     public void removeCachedTable(String tableName);
 
+    public void createAndRegisterEvent(Event event);
+
+    public Event getEvent(String eventName);
 }

@@ -27,4 +27,24 @@ public enum EventDurability {
                 throw new IllegalArgumentException("Unknown EventDurability: " + durability);
         }
     }
+
+    /**
+     * Convert from the Java enum representation of an EventDurability to the integer representation.
+     *
+     * The integer values come from the {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.EventConst.TableEvent}
+     * interface defined in {@link com.mysql.ndbjtie.ndbapi.NdbDictionary}.
+     *
+     * @param durability Java enum representation of the EventDurability.
+     * @return The corresponding integer value.
+     */
+    public static int convert(EventDurability durability) {
+        switch (durability) {
+            case UNDEFINED:
+                return 0;
+            case PERMANENT:
+                return 3;
+            default:
+                throw new IllegalArgumentException("Unknown EventDurability: " + durability);
+        }
+    }
 }

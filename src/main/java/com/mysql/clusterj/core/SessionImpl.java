@@ -17,13 +17,7 @@
 
 package com.mysql.clusterj.core;
 
-import com.mysql.clusterj.ClusterJException;
-import com.mysql.clusterj.ClusterJFatalInternalException;
-import com.mysql.clusterj.ClusterJUserException;
-import com.mysql.clusterj.DynamicObject;
-import com.mysql.clusterj.LockMode;
-import com.mysql.clusterj.Query;
-import com.mysql.clusterj.Transaction;
+import com.mysql.clusterj.*;
 
 import com.mysql.clusterj.core.spi.DomainTypeHandler;
 import com.mysql.clusterj.core.spi.SmartValueHandler;
@@ -35,17 +29,7 @@ import com.mysql.clusterj.core.query.QueryImpl;
 
 import com.mysql.clusterj.core.spi.SessionSPI;
 
-import com.mysql.clusterj.core.store.ClusterTransaction;
-import com.mysql.clusterj.core.store.Db;
-import com.mysql.clusterj.core.store.Dictionary;
-import com.mysql.clusterj.core.store.Index;
-import com.mysql.clusterj.core.store.IndexOperation;
-import com.mysql.clusterj.core.store.IndexScanOperation;
-import com.mysql.clusterj.core.store.Operation;
-import com.mysql.clusterj.core.store.PartitionKey;
-import com.mysql.clusterj.core.store.ResultData;
-import com.mysql.clusterj.core.store.ScanOperation;
-import com.mysql.clusterj.core.store.Table;
+import com.mysql.clusterj.core.store.*;
 
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
@@ -54,6 +38,8 @@ import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.clusterj.query.QueryBuilder;
 import com.mysql.clusterj.query.QueryDefinition;
 import com.mysql.clusterj.query.QueryDomainType;
+import com.mysql.clusterj.tie.EventImpl;
+import com.mysql.ndbjtie.ndbapi.NdbDictionary;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -139,6 +125,25 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
         this.properties = properties;
         transactionImpl = new TransactionImpl(this);
         transactionState = transactionStateNotActive;
+    }
+
+    public void createAndRegisterEvent(String eventName, String tableName) {
+        Event event = new EventImpl(
+                eventName,
+                EventDurability.PERMANENT,
+                EventReport.SUBSCRIBE, /* TODO: Determine the proper value to pass for this */
+                dictionary.getTable(tableName));
+
+        dictionary.createAndRegisterEvent(event);
+    }
+
+    /**
+     * Return the ClusterJ event registered with the server that is identified by the given name.
+     * @param eventName The name of the registered NDB event.
+     * @return The ClusterJ event.
+     */
+    public Event getEvent(String eventName) {
+        return dictionary.getEvent(eventName);
     }
 
     /** Create a query from a query definition.
