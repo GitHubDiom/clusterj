@@ -27,12 +27,14 @@ import com.mysql.clusterj.ClusterJUserException;
 
 import com.mysql.clusterj.core.store.ClusterTransaction;
 
+import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 
 import com.mysql.ndbjtie.ndbapi.Ndb;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
+import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 import com.mysql.ndbjtie.ndbapi.NdbTransaction;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
 
@@ -126,6 +128,22 @@ class DbImplForNdbRecord implements com.mysql.clusterj.core.store.Db {
 
     public boolean isRetriable(ClusterJDatastoreException ex) {
         throw new ClusterJFatalInternalException(local.message("ERR_Implementation_Should_Not_Occur"));
+    }
+
+    public EventOperation createEventOperation(String eventName) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    public boolean dropEventOperation(NdbEventOperation eventOp) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    public boolean pollEvents(int aMillisecondNumber, long[] latestGCI) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    public EventOperation nextEvent() {
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     public String getNdbErrorDetail(NdbErrorConst ndbError) {

@@ -3,12 +3,15 @@ package com.mysql.clusterj.tie;
 import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.Db;
 import com.mysql.clusterj.core.store.EventOperation;
+import com.mysql.clusterj.core.store.RecordAttr;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
-import com.mysql.ndbjtie.ndbapi.NdbEventOperationConst;
+import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
+
+import java.nio.ByteBuffer;
 
 public class NdbEventOperationImpl implements EventOperation {
     /** My message translator */
@@ -120,10 +123,14 @@ public class NdbEventOperationImpl implements EventOperation {
     }
 
     public void execute() {
+        logger.debug("Executing event operation now...");
+
         int returnCode = ndbEventOperation.execute();
 
-        if (returnCode > 0)
+        if (returnCode > 0) {
+            logger.error("Failed to execute the event operation.");
             handleError(returnCode);
+        }
     }
 
     /**
@@ -131,6 +138,24 @@ public class NdbEventOperationImpl implements EventOperation {
      */
     public NdbErrorConst getNdbError() {
         return ndbEventOperation.getNdbError();
+    }
+
+    public RecordAttr getValue(String anAttrName) {
+        ByteBuffer aValue = ByteBuffer.allocateDirect(64); // Big enough.
+
+        logger.debug("Getting value for operation. Attribute name: " + anAttrName);
+        NdbRecAttr ndbRecAttr = ndbEventOperation.getValue(anAttrName, aValue);
+
+        return new NdbRecordAttrImpl(ndbRecAttr, null, aValue);
+    }
+
+    public RecordAttr getPreValue(String anAttrName) {
+        ByteBuffer aValue = ByteBuffer.allocateDirect(64); // Big enough.
+
+        logger.debug("Getting value for operation. Attribute name: " + anAttrName);
+        NdbRecAttr ndbRecAttr = ndbEventOperation.getValue(anAttrName, aValue);
+
+        return new NdbRecordAttrImpl(ndbRecAttr, null, aValue);
     }
 
     protected void handleError() {

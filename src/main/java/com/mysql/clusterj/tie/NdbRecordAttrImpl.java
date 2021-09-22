@@ -9,6 +9,8 @@ import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 
+import java.nio.ByteBuffer;
+
 /**
  * NdbRecAttr
  * Contains value of an attribute.
@@ -63,12 +65,13 @@ public class NdbRecordAttrImpl implements RecordAttr {
             .getInstance(NdbRecordAttrImpl.class);
 
     private final NdbRecAttr ndbRecAttr;
-
+    private final ByteBuffer aValue;
     private final String tableName;
 
-    public NdbRecordAttrImpl(NdbRecAttr ndbRecAttr, String tableName) {
+    public NdbRecordAttrImpl(NdbRecAttr ndbRecAttr, String tableName, ByteBuffer aValue) {
         this.ndbRecAttr = ndbRecAttr;
         this.tableName = tableName;
+        this.aValue = aValue;
     }
 
     public Column getColumn() {
@@ -76,8 +79,7 @@ public class NdbRecordAttrImpl implements RecordAttr {
     }
 
     public int getType() {
-        int columnType = ndbRecAttr.getType();
-        return 0;
+        return ndbRecAttr.getType();
     }
 
     public int get_size_in_bytes() {
@@ -154,6 +156,8 @@ public class NdbRecordAttrImpl implements RecordAttr {
     public RecordAttr cloneNative() {
         NdbRecAttr ndbRecAttrCopy = ndbRecAttr.cloneNative();
 
-        return new NdbRecordAttrImpl(ndbRecAttrCopy, this.tableName);
+        ByteBuffer aValue = this.aValue.duplicate();
+
+        return new NdbRecordAttrImpl(ndbRecAttrCopy, this.tableName, aValue);
     }
 }

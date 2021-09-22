@@ -1,6 +1,9 @@
 package com.mysql.clusterj.core.store;
 
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
+import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
+
+import java.nio.ByteBuffer;
 
 /**
  * Wrapper around {@link com.mysql.ndbjtie.ndbapi.NdbEventOperationConst}.
@@ -80,4 +83,50 @@ public interface EventOperation {
     public void execute();
 
     public NdbErrorConst /*_const NdbError &_*/ getNdbError();
+
+    /**
+     * Defines a retrieval operation of an attribute value.
+     * The NDB API allocate memory for the NdbRecAttr object that
+     * will hold the returned attribute value.
+     *
+     *       Note that it is the application's responsibility
+     *       to allocate enough memory for aValue (if non-NULL).
+     *       The buffer aValue supplied by the application must be
+     *       aligned appropriately.  The buffer is used directly
+     *       (avoiding a copy penalty) only if it is aligned on a
+     *       4-byte boundary and the attribute size in bytes
+     *       (i.e. NdbRecAttr::attrSize() times NdbRecAttr::arraySize() is
+     *       a multiple of 4).
+     *
+     *       There are two versions, getValue() and
+     *       getPreValue() for retrieving the current and
+     *       previous value respective.
+     *
+     *       This method does not fetch the attribute value from
+     *       the database!  The NdbRecAttr object returned by this method
+     *       is <em>not</em> readable/printable before the call to execute()
+     *       has been made and Ndb::nextEvent() has returned not NULL.
+     *       If a specific attribute has not changed the corresponding
+     *       NdbRecAttr will be in state UNDEFINED.  This is checked by
+     *       NdbRecAttr::isNULL() which then returns -1.
+     *
+     * @param anAttrName  Attribute name
+     *        aValue      If this is non-NULL, then the attribute value
+     *                    will be returned in this parameter.<br>
+     *                    If NULL, then the attribute value will only
+     *                    be stored in the returned NdbRecAttr object.
+     *
+     *                    Note: I allocate this buffer directly within the call to getValue() and store it on
+     *                    the ClusterJ RecordAttr object.
+     *
+     * @return            An NdbRecAttr object to hold the value of
+     *                    the attribute, or a NULL pointer
+     *                    (indicating error).
+     */
+    public RecordAttr getValue(String anAttrName);
+
+    /**
+     * See getValue().
+     */
+    public RecordAttr getPreValue(String anAttrName);
 }
