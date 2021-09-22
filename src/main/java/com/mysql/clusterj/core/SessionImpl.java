@@ -40,6 +40,7 @@ import com.mysql.clusterj.query.QueryDefinition;
 import com.mysql.clusterj.query.QueryDomainType;
 import com.mysql.clusterj.tie.EventImpl;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary;
+import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -1515,6 +1516,22 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
      */
     public String unloadSchema(Class<?> cls) {
         return factory.unloadSchema(cls, dictionary);
+    }
+
+    public EventOperation createEventOperation(String eventName) {
+        return db.createEventOperation(eventName);
+    }
+
+    public boolean dropEventOperation(NdbEventOperation eventOp) {
+        return db.dropEventOperation(eventOp);
+    }
+
+    public boolean pollEvents(int aMillisecondNumber, long[] latestGCI) {
+        return db.pollEvents(aMillisecondNumber, latestGCI);
+    }
+
+    public EventOperation nextEvent() {
+        return db.nextEvent();
     }
 
 }

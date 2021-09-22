@@ -21,14 +21,11 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.List;
 
-import com.mysql.ndbjtie.ndbapi.Ndb;
+import com.mysql.clusterj.core.store.EventOperation;
+import com.mysql.ndbjtie.ndbapi.*;
 import com.mysql.ndbjtie.ndbapi.Ndb.Key_part_ptr;
 import com.mysql.ndbjtie.ndbapi.Ndb.Key_part_ptrArray;
 
-import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
-import com.mysql.ndbjtie.ndbapi.NdbInterpretedCode;
-import com.mysql.ndbjtie.ndbapi.NdbScanFilter;
-import com.mysql.ndbjtie.ndbapi.NdbTransaction;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.TableConst;
 import com.mysql.ndbjtie.ndbapi.NdbIndexScanOperation.IndexBound;
@@ -518,6 +515,57 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
         this.autoIncrementBatchSize = (int)autoIncrement[0];
         this.autoIncrementStep = autoIncrement[1];
         this.autoIncrementStart = autoIncrement[2];
+    }
+
+    public EventOperation createEventOperation(String eventName) {
+        logger.debug("Creating event operation for event " + eventName);
+        NdbEventOperation ndbEventOperation = ndb.createEventOperation(eventName);
+
+        if (ndbEventOperation == null) {
+            logger.error("Failed to create event operation for event " + eventName);
+            handleError(null, ndb);
+            return null;
+        }
+
+        return new NdbEventOperationImpl(ndbEventOperation, this);
+    }
+
+    public boolean dropEventOperation(NdbEventOperation eventOp) {
+        int returnCode = ndb.dropEventOperation(eventOp);
+
+        if (returnCode > 0) {
+            logger.error("Failed to drop event operation.");
+            handleError(returnCode, ndb);
+            return false;
+        }
+
+        logger.debug("Successfully dropped event operation.");
+        return true;
+    }
+
+    public boolean pollEvents(int aMillisecondNumber, long[] latestGCI) {
+        // pollEvents returns < 0 on failure, 0 if no events are available, and 1 if there are events available.
+        int returnCode = this.ndb.pollEvents(aMillisecondNumber, latestGCI);
+
+        logger.debug("ndb.pollEvents() returned " + returnCode);
+
+        if (returnCode < 0) {
+            handleError(returnCode, ndb);
+            return false;
+        }
+
+        return (returnCode > 0);
+    }
+
+    public EventOperation nextEvent() {
+        NdbEventOperation ndbEventOperation = ndb.nextEvent();
+
+        if (ndbEventOperation != null) {
+            logger.debug("nextEvent() returned a non-null value!");
+            return new NdbEventOperationImpl(ndbEventOperation, this);
+        }
+
+        return null;
     }
 
 }

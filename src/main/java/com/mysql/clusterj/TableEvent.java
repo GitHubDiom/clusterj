@@ -24,10 +24,10 @@ public enum TableEvent {
      * The integer values come from the {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.EventConst.TableEvent}
      * interface defined in {@link com.mysql.ndbjtie.ndbapi.NdbDictionary}.
      *
-     * @param event Integer representation of a TableEvent.
-     * @return The corresponding Java enum.
+     * @param event Integer representation of the TableEvent.
+     * @return The corresponding Java enum of the TableEvent.
      */
-    public TableEvent convert(int event) {
+    public static TableEvent convert(int event) {
         switch (event) {
             case 1 << 0:
                 return INSERT;
@@ -55,6 +55,48 @@ public enum TableEvent {
                 return UNSUBSCRIBE;
             case 1 << 0XFFFF:
                 return ALL;
+            default:
+                throw new IllegalArgumentException("Unknown TableEvent: " + event);
+        }
+    }
+
+    /**
+     * Convert from the Java enum representation of a TableEvent to the integer representation.
+     *
+     * The integer values come from the {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.EventConst.TableEvent}
+     * interface defined in {@link com.mysql.ndbjtie.ndbapi.NdbDictionary}.
+     *
+     * @param event The Java enum representation of the TableEvent.
+     * @return The corresponding Integer representation of the TableEvent.
+     */
+    public static int convert(TableEvent event) {
+        switch (event) {
+            case INSERT:
+                return 1 << 0;
+            case DELETE:
+                return 1 << 1;
+            case UPDATE:
+                return 1 << 2;
+            case DROP:
+                return 1 << 4;
+            case ALTER:
+                return 1 << 5;
+            case CREATE:
+                return 1 << 6;
+            case GCP_COMPLETE:
+                return 1 << 7;
+            case CLUSTER_FAILURE:
+                return 1 << 8;
+            case STOP:
+                return 1 << 9;
+            case NODE_FAILURE:
+                return 1 << 10;
+            case SUBSCRIBE:
+                return 1 << 11;
+            case UNSUBSCRIBE:
+                return 1 << 12;
+            case ALL:
+                return 1 << 0XFFFF;
             default:
                 throw new IllegalArgumentException("Unknown TableEvent: " + event);
         }

@@ -28,7 +28,23 @@ public interface Dictionary {
 
     public void removeCachedTable(String tableName);
 
+    /**
+     * Create and register an NDB event with the server based on the ClusterJ Event object.
+     * @param event The "template" Event object.
+     */
     public void createAndRegisterEvent(Event event);
 
+    /**
+     * Get an Event already registered with the server.
+     * @param eventName The unique identifier of the event.
+     * @return The event.
+     */
     public Event getEvent(String eventName);
+
+    /**
+     * Delete/remove/drop the event identified by the unique event name from the server.
+     * @param eventName Unique identifier of the event to be dropped.
+     * @param force Not sure what this does.
+     */
+    public void dropEvent(String eventName, int force);
 }

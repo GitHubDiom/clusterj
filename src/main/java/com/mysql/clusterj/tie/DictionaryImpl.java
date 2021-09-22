@@ -32,6 +32,7 @@ import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
+import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 
 /**
  *
@@ -151,9 +152,30 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
         ndbEvent.setTable(ndbTable);
 
+        // Try to register the event.
         int returnCode = ndbDictionary.createEvent(ndbEvent);
 
-        handleError(returnCode, ndbDictionary, "");
+        // If an error has occurred, then we'll try to handle it.
+        // First, we'll check if the error occurred simply because the event already exists.
+        // If that's the case, then we will drop the event and then re-add it.
+        // If we still get an error after that, then we'll raise an exception.
+        if (returnCode != 0) {
+            NdbErrorConst ndbError = ndbDictionary.getNdbError();
+            int errorCode = ndbError.code();
+
+            if (errorCode == NdbErrorConst.Classification.SchemaObjectExists) {
+                logger.debug("Event creation failed: event " + event.getName() + " already exists.");
+                logger.debug("Dropping event " + event.getName());
+                dropEvent(event.getName(), 0);
+
+                // Try to add it again. Throw an exception if we get another error.
+                returnCode = ndbDictionary.createEvent(ndbEvent);
+                if (returnCode > 0) handleError(returnCode, ndbDictionary, "");
+            } else {
+                // There was some other error (i.e., it wasn't that the event already exists).
+                handleError(returnCode, ndbDictionary, "");
+            }
+        }
     }
 
     /**
@@ -170,6 +192,16 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
                 eventConst.getDurability(),
                 eventConst.getReport(),
                 new TableImpl(ndbTable, getIndexNames(ndbTable.getName())));
+    }
+
+    /**
+     * Delete/remove/drop the event identified by the unique event name from the server.
+     * @param eventName Unique identifier of the event to be dropped.
+     * @param force Not sure what this does.
+     */
+    public void dropEvent(String eventName, int force) {
+        int returnCode = ndbDictionary.dropEvent(eventName, force);
+        handleError(returnCode, ndbDictionary, "");
     }
 
     public Dictionary getNdbDictionary() {

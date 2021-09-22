@@ -1,5 +1,6 @@
 package com.mysql.clusterj.tie;
 
+import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.Db;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.util.I18NHelper;
@@ -21,10 +22,13 @@ public class NdbEventOperationImpl implements EventOperation {
     /** The db for this operation */
     protected DbImpl db;
 
-    private NdbEventOperationConst ndbEventOperation;
+    private final NdbEventOperationConst ndbEventOperation;
+
+    private final TableEvent eventType;
 
     public NdbEventOperationImpl(NdbEventOperationConst ndbEventOperation, Db db) {
         this.db = (DbImpl)db;
+        this.eventType = TableEvent.convert(ndbEventOperation.getEventType());
         this.ndbEventOperation = ndbEventOperation;
     }
 
@@ -52,7 +56,7 @@ public class NdbEventOperationImpl implements EventOperation {
      * @return type of event
      */
     public int getEventType() {
-        return ndbEventOperation.getEventType();
+        return TableEvent.convert(eventType);
     }
 
     /**
