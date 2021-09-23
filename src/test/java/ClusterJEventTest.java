@@ -4,6 +4,7 @@ import com.mysql.clusterj.SessionFactory;
 import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
+import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 import org.apache.commons.cli.*;
 
 import java.util.Properties;
@@ -140,6 +141,20 @@ public class ClusterJEventTest {
                 TableEvent eventType = nextEventOp.getEventType();
 
                 System.out.println("Event #" + eventCounter + ": " + eventType.name());
+
+                for (int i = 0; i < eventColumnNames.length; i++) {
+                    RecordAttr postAttr = postAttrs[i];
+                    RecordAttr preAttr = preAttrs[i];
+
+                    // First two columns are integers, second two are strings.
+                    if (i < 2) {
+                        System.out.println("Pre: " + preAttr.u_32_value());
+                        System.out.println("Post: " + postAttr.u_32_value());
+                    } else {
+                        System.out.println("Pre: " + preAttr.toString());
+                        System.out.println("Post: " + postAttr.toString());
+                    }
+                }
 
                 nextEventOp = session.nextEvent();
                 eventCounter++;
