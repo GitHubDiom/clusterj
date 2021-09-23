@@ -2,16 +2,11 @@ package com.mysql.clusterj.tie;
 
 import com.mysql.clusterj.EventDurability;
 import com.mysql.clusterj.EventReport;
-import com.mysql.clusterj.core.store.Column;
 import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
-import com.mysql.ndbjtie.ndbapi.NdbDictionary;
-import com.mysql.ndbjtie.ndbapi.NdbDictionary.EventConst;
-import com.mysql.ndbjtie.ndbapi.NdbDictionary.TableConst;
-import javafx.scene.control.Toggle;
 
 /**
  * Wrapper around {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.Event}.
