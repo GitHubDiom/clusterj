@@ -142,7 +142,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                 eventName,
                 EventDurability.PERMANENT,
                 EventReport.SUBSCRIBE, /* TODO: Determine the proper value to pass for this */
-                ,
+                table,
                 eventColumns,
                 tableEvents);
 
