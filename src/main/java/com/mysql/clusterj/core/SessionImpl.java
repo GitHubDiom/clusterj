@@ -39,7 +39,6 @@ import com.mysql.clusterj.query.QueryBuilder;
 import com.mysql.clusterj.query.QueryDefinition;
 import com.mysql.clusterj.query.QueryDomainType;
 import com.mysql.clusterj.tie.EventImpl;
-import com.mysql.ndbjtie.ndbapi.NdbDictionary;
 import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 
 import java.util.ArrayList;
