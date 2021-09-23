@@ -12,7 +12,7 @@ import java.util.Properties;
 public class ClusterJEventTest {
 
     private static final String DEFAULT_CONNECT_STRING = "10.241.64.15:1186";
-    private static final String DEFAULT_DATABASE = "ndbexamples";
+    private static final String DEFAULT_DATABASE = "ndb_examples";
     private static final String DEFAULT_TABLE_NAME = "t0";
     private static final String DEFAULT_EVENT_NAME = "MY_EVENT_t0";
 

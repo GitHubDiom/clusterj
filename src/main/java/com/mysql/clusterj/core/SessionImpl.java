@@ -132,15 +132,19 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                                        String tableName,
                                        String[] eventColumns,
                                        TableEvent[] tableEvents) {
+        Table table = dictionary.getTable(tableName);
+
+        if (table == null)
+            throw new IllegalArgumentException("Invalid table specified: \"" + tableName
+                    + "\". Table does not exist.");
+
         Event event = new EventImpl(
                 eventName,
                 EventDurability.PERMANENT,
                 EventReport.SUBSCRIBE, /* TODO: Determine the proper value to pass for this */
-                dictionary.getTable(tableName),
+                ,
                 eventColumns,
                 tableEvents);
-
-
 
         dictionary.createAndRegisterEvent(event);
     }
