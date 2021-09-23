@@ -8,7 +8,6 @@ import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
-import com.sun.istack.internal.NotNull;
 
 /**
  * Wrapper around {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.Event}.
@@ -43,9 +42,12 @@ public class EventImpl implements Event {
             String eventName,
             EventDurability eventDurability,
             EventReport eventReport,
-            @NotNull Table table,
+            Table table,
             String[] eventColumns,
             TableEvent[] tableEvents) {
+        if (table == null)
+            throw new IllegalArgumentException("Table must not be null!");
+
         this.name = eventName;
         this.tableName = table.getName();
         this.eventDurability = eventDurability; // EventDurability.convert(ndbEvent.getDurability());
