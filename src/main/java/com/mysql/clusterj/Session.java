@@ -240,7 +240,7 @@ public interface Session {
     String unloadSchema(Class<?> cls);
 
     /**
-     * Create a subcription to an event defined in the database.
+     * Create a subscription to an event defined in the database.
      *
      * @param eventName
      *        unique identifier of the event
@@ -248,6 +248,17 @@ public interface Session {
      * @return Object representing an event, NULL on failure
      */
     public EventOperation createEventOperation(String eventName);
+
+    /**
+     * Create and register an event with the database. The event will be identified by the provided event name and
+     * will be associated with the specified table.
+     * @param eventName The unique name to identify the event with.
+     * @param tableName The table with which the event should be associated.
+     */
+    public void createAndRegisterEvent(String eventName,
+                                       String tableName,
+                                       String[] eventColumns,
+                                       TableEvent[] tableEvents);
 
     /**
      * Drop a subscription to an event.

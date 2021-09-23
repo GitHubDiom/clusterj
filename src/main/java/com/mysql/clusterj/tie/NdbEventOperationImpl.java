@@ -58,8 +58,8 @@ public class NdbEventOperationImpl implements EventOperation {
      *
      * @return type of event
      */
-    public int getEventType() {
-        return TableEvent.convert(eventType);
+    public TableEvent getEventType() {
+        return eventType;
     }
 
     /**

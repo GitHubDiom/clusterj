@@ -2,6 +2,7 @@ package com.mysql.clusterj.tie;
 
 import com.mysql.clusterj.EventDurability;
 import com.mysql.clusterj.EventReport;
+import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
@@ -28,6 +29,10 @@ public class EventImpl implements Event {
 
     private final Table table;
 
+    private String[] eventColumns;
+
+    private TableEvent[] tableEvents;
+
     /**
      * The NDB Event that this is wrapping.
      */
@@ -37,24 +42,21 @@ public class EventImpl implements Event {
             String eventName,
             EventDurability eventDurability,
             EventReport eventReport,
-            Table table) {
+            Table table,
+            String[] eventColumns,
+            TableEvent[] tableEvents) {
         this.name = eventName;
         this.tableName = table.getName();
         this.eventDurability = eventDurability; // EventDurability.convert(ndbEvent.getDurability());
         this.eventReport = eventReport; //EventReport.convert(ndbEvent.getReport());
+        this.eventColumns = eventColumns;
+        this.tableEvents = tableEvents;
 
         //this.ndbEvent = ndbEvent;
         this.table = table;
 
         logger.debug("Created Event: " + this.toString());
     }
-
-    public EventImpl(
-            String eventName,
-            int eventDurability,
-            int eventReport,
-            Table table
-    ) { this(eventName, EventDurability.convert(eventDurability), EventReport.convert(eventReport), table); }
 
     /**
      * Get unique identifier for the event.
@@ -98,7 +100,23 @@ public class EventImpl implements Event {
     }
 
     public int getNoOfEventColumns() {
-        return -1;
+        return this.eventColumns.length;
+    }
+
+    public String[] getEventColumns() {
+        return this.eventColumns;
+    }
+
+    public void setEventColumns(String[] eventColumns) {
+        this.eventColumns = eventColumns;
+    }
+
+    public TableEvent[] getTableEvents() {
+        return this.tableEvents;
+    }
+
+    public void setTableEvents(TableEvent[] tableEvents) {
+        this.tableEvents = tableEvents;
     }
 
     @Override

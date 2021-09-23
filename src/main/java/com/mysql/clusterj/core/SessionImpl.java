@@ -128,12 +128,19 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
         transactionState = transactionStateNotActive;
     }
 
-    public void createAndRegisterEvent(String eventName, String tableName) {
+    public void createAndRegisterEvent(String eventName,
+                                       String tableName,
+                                       String[] eventColumns,
+                                       TableEvent[] tableEvents) {
         Event event = new EventImpl(
                 eventName,
                 EventDurability.PERMANENT,
                 EventReport.SUBSCRIBE, /* TODO: Determine the proper value to pass for this */
-                dictionary.getTable(tableName));
+                dictionary.getTable(tableName),
+                eventColumns,
+                tableEvents);
+
+
 
         dictionary.createAndRegisterEvent(event);
     }

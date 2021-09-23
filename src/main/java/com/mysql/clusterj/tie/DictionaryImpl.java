@@ -17,6 +17,10 @@
 
 package com.mysql.clusterj.tie;
 
+import com.mysql.clusterj.EventDurability;
+import com.mysql.clusterj.EventReport;
+import com.mysql.clusterj.TableEvent;
+import com.mysql.ndbjtie.ndbapi.NdbDictionary;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Event;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.DictionaryConst;
@@ -33,6 +37,8 @@ import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -152,6 +158,12 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
         ndbEvent.setTable(ndbTable);
 
+        for (String columnName : event.getEventColumns())
+            ndbEvent.addEventColumn(columnName);
+
+        for (TableEvent tableEvent : event.getTableEvents())
+            ndbEvent.addTableEvent(TableEvent.convert(tableEvent));
+
         // Try to register the event.
         int returnCode = ndbDictionary.createEvent(ndbEvent);
 
@@ -184,14 +196,41 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      * @return The event.
      */
     public com.mysql.clusterj.core.store.Event getEvent(String eventName) {
-        EventConst eventConst = ndbDictionary.getEvent(eventName);
-        TableConst ndbTable = eventConst.getTable();
+        EventConst ndbEvent = ndbDictionary.getEvent(eventName);
+        TableConst ndbTable = ndbEvent.getTable();
+
+        int numColumns = ndbEvent.getNoOfEventColumns();
+        String[] eventColumnNames = new String[numColumns];
+
+        // Add the event columns by name.
+        for (int i = 0; i < numColumns; i++) {
+            NdbDictionary.ColumnConst ndbColumn = ndbEvent.getEventColumn(i);
+            String columnName = ndbColumn.getName();
+            eventColumnNames[i] = columnName;
+        }
+
+        // Add all the table events. To do this, we iterate over all the
+        // possible events and add the ones that the ndb event is listening for.
+        ArrayList<TableEvent> tableEventArrayList = new ArrayList<TableEvent>();
+        for (TableEvent tableEvent : TableEvent.values()) {
+            int integerRepresentation = TableEvent.convert(tableEvent);
+
+            if (ndbEvent.getTableEvent(integerRepresentation)) {
+                logger.debug(ndbEvent.getName() + ": listening for " + tableEvent.name() + " events.");
+                tableEventArrayList.add(tableEvent);
+            }
+        }
+
+        // Convert to array before passing to ClusterJ event wrapper.
+        TableEvent[] tableEvents = tableEventArrayList.toArray(new TableEvent[0]);
 
         return new EventImpl(
-                eventConst.getName(),
-                eventConst.getDurability(),
-                eventConst.getReport(),
-                new TableImpl(ndbTable, getIndexNames(ndbTable.getName())));
+                ndbEvent.getName(),
+                EventDurability.convert(ndbEvent.getDurability()),
+                EventReport.convert(ndbEvent.getReport()),
+                new TableImpl(ndbTable, getIndexNames(ndbTable.getName())),
+                eventColumnNames,
+                tableEvents);
     }
 
     /**

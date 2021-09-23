@@ -1,5 +1,6 @@
 package com.mysql.clusterj.core.store;
 
+import com.mysql.clusterj.TableEvent;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 
@@ -28,7 +29,7 @@ public interface EventOperation {
      *
      * @return type of event
      */
-    public int getEventType();
+    public TableEvent getEventType();
 
     /**
      * Check if table name has changed, for event TE_ALTER
