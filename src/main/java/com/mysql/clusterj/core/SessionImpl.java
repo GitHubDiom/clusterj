@@ -132,7 +132,8 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     public void createAndRegisterEvent(String eventName,
                                        String tableName,
                                        String[] eventColumns,
-                                       TableEvent[] tableEvents) {
+                                       TableEvent[] tableEvents,
+                                       int force) {
         Table table = dictionary.getTable(tableName);
 
         if (table == null)
@@ -147,7 +148,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                 eventColumns,
                 tableEvents);
 
-        dictionary.createAndRegisterEvent(event);
+        dictionary.createAndRegisterEvent(event, force);
     }
 
     /**

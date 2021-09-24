@@ -254,11 +254,16 @@ public interface Session {
      * will be associated with the specified table.
      * @param eventName The unique name to identify the event with.
      * @param tableName The table with which the event should be associated.
+     * @param eventColumns The columns that are being monitored for the event.
+     * @param tableEvents The events that this event should listen for.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
+     *              and we must drop the existing event first.
      */
     public void createAndRegisterEvent(String eventName,
                                        String tableName,
                                        String[] eventColumns,
-                                       TableEvent[] tableEvents);
+                                       TableEvent[] tableEvents,
+                                       int force);
 
     /**
      * Drop a subscription to an event.

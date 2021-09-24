@@ -150,21 +150,24 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      * Create and register an NDB event with the server.
      *
      * @param event ClusterJ representation of the event.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
+     *              and we must drop the existing event first.
      */
-    public void createAndRegisterEvent(com.mysql.clusterj.core.store.Event event) {
+    public void createAndRegisterEvent(com.mysql.clusterj.core.store.Event event, int force) {
         logger.debug("Attempting to create and register event: " + event.toString());
         TableConst ndbTable = ndbDictionary.getTable(event.getTableName());
         logger.debug("Table " + event.getTableName() + ": " + ndbTable);
         Event ndbEvent = Event.create(event.getName(), ndbTable);
         ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
         ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
-        ndbEvent.setTable(ndbTable);
 
         for (String columnName : event.getEventColumns())
             ndbEvent.addEventColumn(columnName);
 
         for (TableEvent tableEvent : event.getTableEvents())
             ndbEvent.addTableEvent(TableEvent.convert(tableEvent));
+
+        ndbEvent.mergeEvents(false);
 
         ElementArray arr = ElementArray.create(100);
         DictionaryConst.List list = DictionaryConst.List.create();
@@ -177,7 +180,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
         for (int i = 0; i < numElements; i++) {
             NdbDictionary.DictionaryConst.ListConst.Element element = arr2.at(i);
-            System.out.println("Element " + i + "/" + numElements);
+            System.out.println("Element " + (i+1) + "/" + numElements);
             System.out.println("\tName: " + element.name() + "\n\tID: " + element.id());
             System.out.println("\tSchema: " + element.schema() + "\n\tDatabase: " + element.database());
         }
@@ -200,7 +203,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
             if (classification == NdbErrorConst.Classification.SchemaObjectExists) {
                 logger.debug("Event creation failed: event " + event.getName() + " already exists.");
-                dropEvent(event.getName(), 0);
+                dropEvent(event.getName(), force);
 
                 // Try to add it again. Throw an exception if we get another error.
                 returnCode = ndbDictionary.createEvent(ndbEvent);

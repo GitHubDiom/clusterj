@@ -31,8 +31,10 @@ public interface Dictionary {
     /**
      * Create and register an NDB event with the server based on the ClusterJ Event object.
      * @param event The "template" Event object.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
+     *              and we must drop the existing event first.
      */
-    public void createAndRegisterEvent(Event event);
+    public void createAndRegisterEvent(Event event, int force);
 
     /**
      * Get an Event already registered with the server.

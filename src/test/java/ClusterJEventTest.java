@@ -46,11 +46,18 @@ public class ClusterJEventTest {
                 "Number of events to listen for before stopping. Default: " + DEFAULT_TIMEOUT
         );
 
+        Option forceOption = new Option(
+                "f", "force", true,
+                "Pass '1' for the force argument to dropEvent(), if a call to that function occurs." +
+                        " Default: 0."
+        );
+
         options.addOption(connectStringOption);
         options.addOption(databaseOption);
         options.addOption(tableNameOption);
         options.addOption(eventNameOption);
         options.addOption(timeoutOption);
+        options.addOption(forceOption);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -70,6 +77,7 @@ public class ClusterJEventTest {
         String tableName = DEFAULT_TABLE_NAME;
         String eventName = DEFAULT_EVENT_NAME;
         int timeout = DEFAULT_TIMEOUT;
+        int force = 0;
 
         if (cmd.hasOption("connect_string"))
             connectString = cmd.getOptionValue("connect_string");
@@ -86,6 +94,9 @@ public class ClusterJEventTest {
         if (cmd.hasOption("timeout"))
             timeout = Integer.parseInt(cmd.getOptionValue("timeout"));
 
+        if (cmd.hasOption("force"))
+            force = Integer.parseInt(cmd.getOptionValue("force"));
+
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
         props.put("com.mysql.clusterj.database", database);
@@ -96,6 +107,7 @@ public class ClusterJEventTest {
         System.out.println("Target table: " + tableName);
         System.out.println("Event name: " + eventName);
         System.out.println("Timeout: " + timeout);
+        System.out.println("Force: " + force);
         System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
@@ -113,7 +125,8 @@ public class ClusterJEventTest {
                 eventName,
                 tableName,
                 eventColumnNames,
-                new TableEvent[] { TableEvent.ALL });
+                new TableEvent[] { TableEvent.ALL },
+                force);
 
         EventOperation eventOperation = session.createEventOperation(eventName);
 
