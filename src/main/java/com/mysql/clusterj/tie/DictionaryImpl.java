@@ -171,11 +171,13 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         list.elements(arr);
         ndbDictionary.listEvents(list);
 
+        int numElements = list.count();
+
         ElementArray arr2 = list.elements();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < numElements; i++) {
             NdbDictionary.DictionaryConst.ListConst.Element element = arr2.at(i);
-            System.out.println("Element #" + i);
+            System.out.println("Element " + i + "/" + numElements);
             System.out.println("\tName: " + element.name() + "\n\tID: " + element.id());
             System.out.println("\tSchema: " + element.schema() + "\n\tDatabase: " + element.database());
         }
