@@ -2,6 +2,7 @@ import com.mysql.clusterj.ClusterJHelper;
 import com.mysql.clusterj.Session;
 import com.mysql.clusterj.SessionFactory;
 import com.mysql.clusterj.TableEvent;
+import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
@@ -101,14 +102,14 @@ public class ClusterJEventTest {
         props.put("com.mysql.clusterj.connectstring", connectString);
         props.put("com.mysql.clusterj.database", database);
 
-        System.out.println("=-=-=-=-=-=-=-=-=-=-= Arguments Debug Information =-=-=-=-=-=-=-=-=-=-=");
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-= Arguments Debug Information =-=-=-=-=-=-=-=-=-=-=");
         System.out.println("Using connect string \"" + connectString + "\" to connect to NDB cluster.");
         System.out.println("Target database: " + database);
         System.out.println("Target table: " + tableName);
         System.out.println("Event name: " + eventName);
         System.out.println("Timeout: " + timeout);
         System.out.println("Force: " + force);
-        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
@@ -120,6 +121,11 @@ public class ClusterJEventTest {
                 "c3",
                 "c4"
         };
+
+        System.out.println("Checking to see if event with name " + eventName + " already exists...");
+        Event event = session.getEvent(eventName);
+
+        System.out.println("Event: " + event.toString());
 
         session.createAndRegisterEvent(
                 eventName,

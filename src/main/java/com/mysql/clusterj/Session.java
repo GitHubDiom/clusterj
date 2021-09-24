@@ -17,6 +17,7 @@
 
 package com.mysql.clusterj;
 
+import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.query.QueryBuilder;
 import com.mysql.clusterj.query.QueryDefinition;
@@ -324,4 +325,12 @@ public interface Session {
      *   representing an event buffer overflow.
      */
     public EventOperation nextEvent();
+
+    /**
+     * Return the event with the given name.
+     *
+     * @param eventName The name of the event.
+     * @return The event.
+     */
+    public Event getEvent(String eventName);
 }

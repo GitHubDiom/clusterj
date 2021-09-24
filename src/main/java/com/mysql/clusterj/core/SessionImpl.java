@@ -1546,5 +1546,4 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     public EventOperation nextEvent() {
         return db.nextEvent();
     }
-
 }
