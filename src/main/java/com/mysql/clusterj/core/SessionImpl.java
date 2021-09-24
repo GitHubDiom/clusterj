@@ -58,9 +58,9 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     static final I18NHelper local = I18NHelper.getInstance(SessionImpl.class);
 
     /** My logger */
-    //static final Logger logger = LoggerFactoryService.getFactory().getInstance(SessionImpl.class);
+    static final Logger logger = LoggerFactoryService.getFactory().getInstance(SessionImpl.class);
 
-    static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SessionImpl.class);
+    // static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SessionImpl.class);
 
     /** My Factory. */
     protected SessionFactoryImpl factory;

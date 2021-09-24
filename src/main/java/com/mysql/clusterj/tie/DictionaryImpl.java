@@ -20,6 +20,9 @@ package com.mysql.clusterj.tie;
 import com.mysql.clusterj.EventDurability;
 import com.mysql.clusterj.EventReport;
 import com.mysql.clusterj.TableEvent;
+import com.mysql.clusterj.core.SessionFactoryServiceImpl;
+import com.mysql.clusterj.core.util.Logger;
+import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Event;
@@ -35,7 +38,6 @@ import com.mysql.clusterj.core.store.Table;
 
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -49,10 +51,8 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             .getInstance(DictionaryImpl.class);
 
     /** My logger */
-//    static final Logger logger = LoggerFactoryService.getFactory()
-//            .getInstance(DictionaryImpl.class);
-
-    static final Logger logger = org.apache.log4j.Logger.getLogger(DictionaryImpl.class);
+    // static final Logger logger = org.apache.log4j.Logger.getLogger(DictionaryImpl.class);
+    static final Logger logger = LoggerFactoryService.getFactory().getInstance(DictionaryImpl.class);
 
     private Dictionary ndbDictionary;
 

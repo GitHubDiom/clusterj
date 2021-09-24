@@ -63,15 +63,19 @@ public class JDK14LoggerFactoryImpl implements LoggerFactory {
     @SuppressWarnings("unchecked")
     public Logger getInstance(Class cls) {
         String loggerName = getPackageName(cls);
-        return getInstance(loggerName);
+        org.apache.log4j.Logger wrappedLogger = org.apache.log4j.Logger.getLogger(loggerName);
+        return new Log4jWrappedLogger(wrappedLogger);
+        // return getInstance(loggerName);
     }
 
     public synchronized Logger getInstance(String loggerName) {
-        Logger result = loggerMap.get(loggerName);
-        if (result == null) {
-            result = registerLogger(loggerName);
-        }
-        return result;
+        org.apache.log4j.Logger wrappedLogger = org.apache.log4j.Logger.getLogger(loggerName);
+        return new Log4jWrappedLogger(wrappedLogger);
+//        Logger result = loggerMap.get(loggerName);
+//        if (result == null) {
+//            result = registerLogger(loggerName);
+//        }
+//        return result;
     }
 
     /**  
@@ -87,4 +91,58 @@ public class JDK14LoggerFactoryImpl implements LoggerFactory {
         return ((index != -1) ? className.substring(0, index) : ""); // NOI18N
     }
 
+    /**
+     * Wrapped around Log4j logger because I'd much rather use that...
+     */
+    public class Log4jWrappedLogger implements Logger {
+        private org.apache.log4j.Logger wrappedLogger;
+
+        public Log4jWrappedLogger(org.apache.log4j.Logger wrappedLogger) {
+            this.wrappedLogger = wrappedLogger;
+        }
+
+        public void detail(String message) {
+            wrappedLogger.debug(message);
+        }
+
+        public void debug(String message) {
+            wrappedLogger.debug(message);
+        }
+
+        public void trace(String message) {
+            wrappedLogger.trace(message);
+        }
+
+        public void info(String message) {
+            wrappedLogger.info(message);
+        }
+
+        public void warn(String message) {
+            wrappedLogger.warn(message);
+        }
+
+        public void error(String message) {
+            wrappedLogger.error(message);
+        }
+
+        public void fatal(String message) {
+            wrappedLogger.fatal(message);
+        }
+
+        public boolean isDetailEnabled() {
+            return wrappedLogger.isDebugEnabled();
+        }
+
+        public boolean isDebugEnabled() {
+            return wrappedLogger.isDebugEnabled();
+        }
+
+        public boolean isTraceEnabled() {
+            return wrappedLogger.isTraceEnabled();
+        }
+
+        public boolean isInfoEnabled() {
+            return wrappedLogger.isInfoEnabled();
+        }
+    }
 }
