@@ -222,6 +222,12 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      */
     public com.mysql.clusterj.core.store.Event getEvent(String eventName) {
         EventConst ndbEvent = ndbDictionary.getEvent(eventName);
+
+        if (ndbEvent == null) {
+            logger.warn("Could not find event with name " + eventName + ". Event does not exist...");
+            return null;
+        }
+
         TableConst ndbTable = ndbEvent.getTable();
 
         int numColumns = ndbEvent.getNoOfEventColumns();
