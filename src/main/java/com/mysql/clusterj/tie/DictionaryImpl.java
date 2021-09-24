@@ -184,7 +184,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             if (classification == NdbErrorConst.Classification.SchemaObjectExists) {
                 logger.debug("Event creation failed: event " + event.getName() + " already exists.");
                 logger.debug("Dropping event " + event.getName());
-                dropEvent(event.getName(), 0);
+                dropEvent(event.getName(), 1);
 
                 // Try to add it again. Throw an exception if we get another error.
                 returnCode = ndbDictionary.createEvent(ndbEvent);
@@ -246,7 +246,9 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      */
     public void dropEvent(String eventName, int force) {
         int returnCode = ndbDictionary.dropEvent(eventName, force);
-        handleError(returnCode, ndbDictionary, "");
+
+        if (returnCode != 0)
+            handleError(returnCode, ndbDictionary, "");
     }
 
     public Dictionary getNdbDictionary() {
