@@ -6,8 +6,7 @@ import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
-import com.mysql.clusterj.core.util.Logger;
-import com.mysql.clusterj.core.util.LoggerFactoryService;
+import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 
@@ -20,8 +19,8 @@ public class EventImpl implements Event {
             .getInstance(EventImpl.class);
 
     /** My logger */
-    static final Logger logger = LoggerFactoryService.getFactory()
-            .getInstance(EventImpl.class);
+    // static final Logger logger = LoggerFactoryService.getFactory().getInstance(EventImpl.class);
+    static final Logger logger = Logger.getLogger(EventImpl.class);
 
     private final String name;
     private final String tableName;

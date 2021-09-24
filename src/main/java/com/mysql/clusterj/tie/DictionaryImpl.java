@@ -34,9 +34,8 @@ import com.mysql.clusterj.core.store.Index;
 import com.mysql.clusterj.core.store.Table;
 
 import com.mysql.clusterj.core.util.I18NHelper;
-import com.mysql.clusterj.core.util.Logger;
-import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -50,8 +49,10 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             .getInstance(DictionaryImpl.class);
 
     /** My logger */
-    static final Logger logger = LoggerFactoryService.getFactory()
-            .getInstance(DictionaryImpl.class);
+//    static final Logger logger = LoggerFactoryService.getFactory()
+//            .getInstance(DictionaryImpl.class);
+
+    static final Logger logger = org.apache.log4j.Logger.getLogger(DictionaryImpl.class);
 
     private Dictionary ndbDictionary;
 
@@ -104,7 +105,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             handleError(returnCode, ndbDictionary, tableName);
             int count = indexList.count();
             result = new String[count];
-            if (logger.isDetailEnabled()) logger.detail("Found " + count + " indexes for " + tableName);
+            if (logger.isDebugEnabled()) logger.debug("Found " + count + " indexes for " + tableName);
             ElementArray elementArray = indexList.elements();
             for (int i = 0; i < count; ++i) {
                 Element element = elementArray.at(i);

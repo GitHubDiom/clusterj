@@ -58,7 +58,9 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     static final I18NHelper local = I18NHelper.getInstance(SessionImpl.class);
 
     /** My logger */
-    static final Logger logger = LoggerFactoryService.getFactory().getInstance(SessionImpl.class);
+    //static final Logger logger = LoggerFactoryService.getFactory().getInstance(SessionImpl.class);
+
+    static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SessionImpl.class);
 
     /** My Factory. */
     protected SessionFactoryImpl factory;
@@ -233,12 +235,12 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
             if (rs.next()) {
                 // we have a result; initialize the instance
                 if (instanceHandler == null) {
-                    if (logger.isDetailEnabled()) logger.detail("Creating instanceHandler for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
+                    if (logger.isDebugEnabled()) logger.debug("Creating instanceHandler for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
                     // we need both a new instance and its handler
                     instance = domainTypeHandler.newInstance(db);
                     instanceHandler = domainTypeHandler.getValueHandler(instance);
                 } else if (instance == null) {
-                if (logger.isDetailEnabled()) logger.detail("Creating instance for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
+                if (logger.isDebugEnabled()) logger.debug("Creating instance for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
                     // we have a handler but no instance
                     instance = domainTypeHandler.getInstance(instanceHandler);
                 }
@@ -251,7 +253,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                 // reset modified bits in instance
                 domainTypeHandler.objectResetModified(instanceHandler);
             } else {
-                if (logger.isDetailEnabled()) logger.detail("No instance found in database for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
+                if (logger.isDebugEnabled()) logger.debug("No instance found in database for class " + domainTypeHandler.getName() + " table: " + domainTypeHandler.getTableName() + keyHandler.pkToString(domainTypeHandler));
                 // no instance found in database
                 if (instanceHandler != null) {
                     // mark the handler as not found
@@ -679,7 +681,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
             return;
         }
         DomainTypeHandler<?> domainTypeHandler = getDomainTypeHandler(object);
-        if (logger.isDetailEnabled()) logger.detail("UpdatePersistent on object " + object);
+        if (logger.isDebugEnabled()) logger.debug("UpdatePersistent on object " + object);
         ValueHandler valueHandler = domainTypeHandler.getValueHandler(object);
         update(domainTypeHandler, valueHandler);
     }
@@ -705,7 +707,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
             op = clusterTransaction.getUpdateOperation(storeTable);
             domainTypeHandler.operationSetKeys(valueHandler, op);
             domainTypeHandler.operationSetModifiedNonPKValues(valueHandler, op);
-            if (logger.isDetailEnabled()) logger.detail("Updated object " +
+            if (logger.isDebugEnabled()) logger.debug("Updated object " +
                     valueHandler);
         } catch (ClusterJException ex) {
             failAutoTransaction();
@@ -732,7 +734,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
      */
     public <T> T savePersistent(T instance) {
         DomainTypeHandler<T> domainTypeHandler = getDomainTypeHandler(instance);
-        if (logger.isDetailEnabled()) logger.detail("UpdatePersistent on object " + instance);
+        if (logger.isDebugEnabled()) logger.debug("UpdatePersistent on object " + instance);
         ValueHandler valueHandler = domainTypeHandler.getValueHandler(instance);
         startAutoTransaction();
         setPartitionKey(domainTypeHandler, valueHandler);
@@ -1394,7 +1396,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
    }
 
     public void flush(boolean commit) {
-        if (logger.isDetailEnabled()) logger.detail("flush changes with changeList size: " + changeList.size());
+        if (logger.isDebugEnabled()) logger.debug("flush changes with changeList size: " + changeList.size());
         if (!changeList.isEmpty()) {
             for (StateManager sm: changeList) {
                 sm.flush(this);
