@@ -78,10 +78,10 @@ public class ClusterJEventTest {
             database = cmd.getOptionValue("database");
 
         if (cmd.hasOption("event_name"))
-            tableName = cmd.getOptionValue("event_name");
+            eventName = cmd.getOptionValue("event_name");
 
         if (cmd.hasOption("table_name"))
-            eventName = cmd.getOptionValue("table_name");
+            tableName = cmd.getOptionValue("table_name");
 
         if (cmd.hasOption("timeout"))
             timeout = Integer.parseInt(cmd.getOptionValue("timeout"));
@@ -90,8 +90,13 @@ public class ClusterJEventTest {
         props.put("com.mysql.clusterj.connectstring", connectString);
         props.put("com.mysql.clusterj.database", database);
 
+        System.out.println("=-=-=-=-=-=-=-=-=-=-= Arguments Debug Information =-=-=-=-=-=-=-=-=-=-=");
         System.out.println("Using connect string \"" + connectString + "\" to connect to NDB cluster.");
         System.out.println("Target database: " + database);
+        System.out.println("Target table: " + tableName);
+        System.out.println("Event name: " + eventName);
+        System.out.println("Timeout: " + timeout);
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
@@ -105,7 +110,7 @@ public class ClusterJEventTest {
         };
 
         session.createAndRegisterEvent(
-                "MY_EVENT_t0",
+                eventName,
                 tableName,
                 eventColumnNames,
                 new TableEvent[] { TableEvent.ALL });
