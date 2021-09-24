@@ -19,6 +19,7 @@ package com.mysql.clusterj.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 public class JDK14LoggerFactoryImpl implements LoggerFactory {
@@ -53,6 +54,7 @@ public class JDK14LoggerFactoryImpl implements LoggerFactory {
 
     public Logger registerLogger(String loggerName) {
         java.util.logging.Logger logger = java.util.logging.Logger.getLogger(loggerName);
+        logger.setLevel(Level.FINEST);
         Logger result = new JDK14LoggerImpl(logger);
         loggerMap.put(loggerName, result);
         return result;
