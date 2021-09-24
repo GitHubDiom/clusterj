@@ -247,7 +247,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             int integerRepresentation = TableEvent.convert(tableEvent);
 
             if (ndbEvent.getTableEvent(integerRepresentation)) {
-                logger.debug(ndbEvent.getName() + ": listening for " + tableEvent.name() + " events.");
+                // logger.debug(ndbEvent.getName() + ": listening for " + tableEvent.name() + " events.");
                 tableEventArrayList.add(tableEvent);
             }
         }
@@ -273,8 +273,10 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         logger.debug("Dropping event " + eventName + ", force = " + force);
         int returnCode = ndbDictionary.dropEvent(eventName, force);
 
-        if (returnCode != 0)
+        if (returnCode != 0) {
+            logger.error("Encountered non-zero return code " + returnCode + " after trying to drop event " + eventName);
             handleError(returnCode, ndbDictionary, "");
+        }
     }
 
     public Dictionary getNdbDictionary() {
