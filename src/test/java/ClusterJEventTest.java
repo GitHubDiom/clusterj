@@ -125,7 +125,9 @@ public class ClusterJEventTest {
         System.out.println("Checking to see if event with name " + eventName + " already exists...");
         Event event = session.getEvent(eventName);
 
-        System.out.println("Event: " + event.toString());
+        System.out.println("Located event: " + (event != null));
+        if (event != null)
+            System.out.println("Event " + eventName + ": " + event.toString());
 
         session.createAndRegisterEvent(
                 eventName,
