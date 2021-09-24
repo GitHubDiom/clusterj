@@ -9,6 +9,8 @@ import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 
+import java.util.Arrays;
+
 /**
  * Wrapper around {@link com.mysql.ndbjtie.ndbapi.NdbDictionary.Event}.
  */
@@ -125,6 +127,7 @@ public class EventImpl implements Event {
     @Override
     public String toString() {
         return "EventImpl[name=" + name + ", tableName=" + tableName + ", eventDurability=" + eventDurability.name()
-                + ", eventReport=" + eventReport.name() + ", table=" + table;
+                + ", eventReport=" + eventReport.name() + ", table=" + table + ", tableEvents: "
+                + Arrays.toString(tableEvents) + ", event Columns: " + Arrays.toString(eventColumns);
     }
 }
