@@ -95,8 +95,15 @@ public class ClusterJEventTest {
         if (cmd.hasOption("force"))
             force = Integer.parseInt(cmd.getOptionValue("force"));
 
-        ClusterJHelper.newDbug().debug("d:t:L:F:o,dbug.log").set();
-        System.out.println("Set Dbug string to \"d\"");
+        String originalDbugState = ClusterJHelper.newDbug().get();
+        System.out.println("Original Dbug state: \"" + originalDbugState + "\"");
+
+        String dbugString = "d:t:L:F:o,dbug.log";
+        ClusterJHelper.newDbug().trace().debug(dbugString).set();
+        System.out.println("Set Dbug string to \"" + dbugString + "\"");
+
+        String currentDbugState = ClusterJHelper.newDbug().get();
+        System.out.println("Current Dbug state: \"" + originalDbugState + "\"");
 
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
