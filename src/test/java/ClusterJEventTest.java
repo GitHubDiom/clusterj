@@ -5,6 +5,8 @@ import com.mysql.clusterj.core.store.RecordAttr;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 import org.apache.commons.cli.*;
 
+import java.util.Scanner;
+
 import java.util.Properties;
 
 public class ClusterJEventTest {
@@ -96,6 +98,12 @@ public class ClusterJEventTest {
             force = Integer.parseInt(cmd.getOptionValue("force"));
 
         Dbug dbug = ClusterJHelper.newDbug();
+
+        Scanner sc = new Scanner(System.in);
+
+        // Pause execution.
+        System.out.print("Enter anything to continue...\n> ");
+        sc.nextLine();
 
         String oldDbug = dbug.get();
         dbug.push("d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log");
