@@ -96,6 +96,7 @@ public class ClusterJEventTest {
             force = Integer.parseInt(cmd.getOptionValue("force"));
 
         ClusterJHelper.newDbug().debug("d").set();
+        System.out.println("Set Dbug string to \"d\"");
 
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
