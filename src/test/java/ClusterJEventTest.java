@@ -99,10 +99,11 @@ public class ClusterJEventTest {
         System.out.println("Original Dbug state: \"" + originalDbugState + "\"");
 
         String dbugString = "d:t:L:F:o,dbug.log";
-        ClusterJHelper.newDbug().trace().debug(dbugString).set();
+        Dbug dbug = ClusterJHelper.newDbug().trace().debug(dbugString);
+        dbug.set();
         System.out.println("Set Dbug string to \"" + dbugString + "\"");
 
-        String currentDbugState = ClusterJHelper.newDbug().get();
+        String currentDbugState = dbug.get();
         System.out.println("Current Dbug state: \"" + currentDbugState + "\"");
 
         Properties props = new Properties();
