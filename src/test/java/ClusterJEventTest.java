@@ -95,7 +95,7 @@ public class ClusterJEventTest {
         if (cmd.hasOption("force"))
             force = Integer.parseInt(cmd.getOptionValue("force"));
 
-        ClusterJHelper.newDbug().debug("d").set();
+        ClusterJHelper.newDbug().debug("d:t:L:F:o,dbug.log").set();
         System.out.println("Set Dbug string to \"d\"");
 
         Properties props = new Properties();
