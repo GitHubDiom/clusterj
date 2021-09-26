@@ -1,7 +1,4 @@
-import com.mysql.clusterj.ClusterJHelper;
-import com.mysql.clusterj.Session;
-import com.mysql.clusterj.SessionFactory;
-import com.mysql.clusterj.TableEvent;
+import com.mysql.clusterj.*;
 import com.mysql.clusterj.core.store.Event;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
@@ -97,6 +94,8 @@ public class ClusterJEventTest {
 
         if (cmd.hasOption("force"))
             force = Integer.parseInt(cmd.getOptionValue("force"));
+
+        ClusterJHelper.newDbug().debug("d").set();
 
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
