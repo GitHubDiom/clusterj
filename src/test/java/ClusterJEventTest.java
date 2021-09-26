@@ -103,7 +103,7 @@ public class ClusterJEventTest {
         System.out.println("Set Dbug string to \"" + dbugString + "\"");
 
         String currentDbugState = ClusterJHelper.newDbug().get();
-        System.out.println("Current Dbug state: \"" + originalDbugState + "\"");
+        System.out.println("Current Dbug state: \"" + currentDbugState + "\"");
 
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
