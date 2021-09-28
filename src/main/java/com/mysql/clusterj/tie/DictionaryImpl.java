@@ -157,7 +157,18 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         logger.debug("Attempting to create and register event: " + event.toString());
         TableConst ndbTable = ndbDictionary.getTable(event.getTableName());
         logger.debug("Table " + event.getTableName() + ": " + ndbTable);
-        Event ndbEvent = Event.create(event.getName(), ndbTable);
+
+        //Event ndbEvent = Event.create(event.getName(), ndbTable);
+        Event ndbEvent = Event.create(event.getName());
+
+        int returnCode = ndbEvent.setTable(event.getTableName());
+
+        if (returnCode != 0) {
+            logger.error("Encountered error when setting table to " + event.getTableName() + " for event " +
+                    event.getName() + "...");
+            handleError(returnCode, ndbDictionary, "");
+        }
+
         ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
         ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
 
@@ -169,24 +180,8 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
         ndbEvent.mergeEvents(false);
 
-        /*ElementArray arr = ElementArray.create(100);
-        DictionaryConst.List list = DictionaryConst.List.create();
-        list.elements(arr);
-        ndbDictionary.listEvents(list);
-
-        int numElements = list.count();
-
-        ElementArray arr2 = list.elements();
-
-        for (int i = 0; i < numElements; i++) {
-            NdbDictionary.DictionaryConst.ListConst.Element element = arr2.at(i);
-            System.out.println("Element " + (i+1) + "/" + numElements);
-            System.out.println("\tName: " + element.name() + "\n\tID: " + element.id());
-            System.out.println("\tSchema: " + element.schema() + "\n\tDatabase: " + element.database());
-        }*/
-
         // Try to register the event.
-        int returnCode = ndbDictionary.createEvent(ndbEvent);
+        returnCode = ndbDictionary.createEvent(ndbEvent);
 
         // If an error has occurred, then we'll try to handle it.
         // First, we'll check if the error occurred simply because the event already exists.
