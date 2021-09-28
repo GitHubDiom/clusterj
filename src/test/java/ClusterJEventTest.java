@@ -15,6 +15,7 @@ public class ClusterJEventTest {
     private static final String DEFAULT_DATABASE = "ndb_examples";
     private static final String DEFAULT_TABLE_NAME = "t0";
     private static final String DEFAULT_EVENT_NAME = "MY_EVENT_t0";
+    private static final String DEFAULT_DEBUG_STRING = "d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log";
 
     private static final int DEFAULT_TIMEOUT = 30;
 
@@ -52,12 +53,19 @@ public class ClusterJEventTest {
                         " Default: 0."
         );
 
+        Option debugStringOption = new Option(
+                "ds", "debug_string", true,
+                "Debug string to pass to underlying NDB API. " +
+                        "Default is: \"d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log\""
+        );
+
         options.addOption(connectStringOption);
         options.addOption(databaseOption);
         options.addOption(tableNameOption);
         options.addOption(eventNameOption);
         options.addOption(timeoutOption);
         options.addOption(forceOption);
+        options.addOption(debugStringOption);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -76,6 +84,7 @@ public class ClusterJEventTest {
         String database = DEFAULT_DATABASE;
         String tableName = DEFAULT_TABLE_NAME;
         String eventName = DEFAULT_EVENT_NAME;
+        String debugString = DEFAULT_DEBUG_STRING;
         int timeout = DEFAULT_TIMEOUT;
         int force = 0;
 
@@ -97,19 +106,18 @@ public class ClusterJEventTest {
         if (cmd.hasOption("force"))
             force = Integer.parseInt(cmd.getOptionValue("force"));
 
+        if (cmd.hasOption("debug_string"))
+            debugString = cmd.getOptionValue("debug_string");
+
         Dbug dbug = ClusterJHelper.newDbug();
 
-        Scanner sc = new Scanner(System.in);
-
         // Pause execution.
-        System.out.print("Enter anything to continue...\n> ");
-        sc.nextLine();
+        System.out.println("Assigning debug string \"" + debugString + "\" now...");
 
-        String oldDbug = dbug.get();
-        dbug.push("d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log");
+        dbug.push(debugString);
         String newDbug = dbug.get();
 
-        System.out.println("Old dbug: \"" + oldDbug + "\"\nNew dbug: \"" + newDbug + "\"");
+        System.out.println("New debug string: \"" + newDbug + "\"");
 
         Properties props = new Properties();
         props.put("com.mysql.clusterj.connectstring", connectString);
