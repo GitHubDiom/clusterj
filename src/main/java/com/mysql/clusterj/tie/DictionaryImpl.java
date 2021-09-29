@@ -159,15 +159,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         logger.debug("Table " + event.getTableName() + ": " + ndbTable);
 
         //Event ndbEvent = Event.create(event.getName(), ndbTable);
-        Event ndbEvent = Event.create(event.getName());
-
-        int returnCode = ndbEvent.setTable(event.getTableName());
-
-        if (returnCode != 0) {
-            logger.error("Encountered error when setting table to " + event.getTableName() + " for event " +
-                    event.getName() + "...");
-            handleError(returnCode, ndbDictionary, "");
-        }
+        Event ndbEvent = Event.create(event.getName(), ndbTable);
 
         ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
         ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
@@ -181,7 +173,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         ndbEvent.mergeEvents(false);
 
         // Try to register the event.
-        returnCode = ndbDictionary.createEvent(ndbEvent);
+        int returnCode = ndbDictionary.createEvent(ndbEvent);
 
         // If an error has occurred, then we'll try to handle it.
         // First, we'll check if the error occurred simply because the event already exists.
@@ -199,6 +191,9 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
             if (classification == NdbErrorConst.Classification.SchemaObjectExists) {
                 logger.debug("Event creation failed: event " + event.getName() + " already exists.");
                 dropEvent(event.getName(), force);
+
+                logger.debug("Trying again to create event " + event.getName() + " on table "
+                        + ndbEvent.getTableName());
 
                 // Try to add it again. Throw an exception if we get another error.
                 returnCode = ndbDictionary.createEvent(ndbEvent);

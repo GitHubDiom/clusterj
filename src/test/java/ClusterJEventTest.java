@@ -148,7 +148,7 @@ public class ClusterJEventTest {
 
         System.out.println("Located event: " + (event != null));
         if (event != null)
-            System.out.println("Event " + eventName + ": " + event.toString());
+            System.out.println("Event " + eventName + ": " + event);
 
         session.createAndRegisterEvent(
                 eventName,
