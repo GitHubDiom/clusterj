@@ -17,6 +17,7 @@
 
 package com.mysql.clusterj.tie;
 
+import com.mysql.clusterj.ClusterJDatastoreException;
 import com.mysql.clusterj.EventDurability;
 import com.mysql.clusterj.EventReport;
 import com.mysql.clusterj.TableEvent;
@@ -155,22 +156,8 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      */
     public void createAndRegisterEvent(com.mysql.clusterj.core.store.Event event, int force) {
         logger.debug("Attempting to create and register event: " + event.toString());
-        TableConst ndbTable = ndbDictionary.getTable(event.getTableName());
-        logger.debug("Table " + event.getTableName() + ": " + ndbTable);
 
-        //Event ndbEvent = Event.create(event.getName(), ndbTable);
-        Event ndbEvent = Event.create(event.getName(), ndbTable);
-
-        ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
-        ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
-
-        for (String columnName : event.getEventColumns())
-            ndbEvent.addEventColumn(columnName);
-
-        for (TableEvent tableEvent : event.getTableEvents())
-            ndbEvent.addTableEvent(TableEvent.convert(tableEvent));
-
-        ndbEvent.mergeEvents(false);
+        EventConst ndbEvent = getNdbEventFromClusterJEvent(event);
 
         // Try to register the event.
         int returnCode = ndbDictionary.createEvent(ndbEvent);
@@ -192,8 +179,11 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
                 logger.debug("Event creation failed: event " + event.getName() + " already exists.");
                 dropEvent(event.getName(), force);
 
+                // Re-create it first.
+                ndbEvent = getNdbEventFromClusterJEvent(event);
+
                 logger.debug("Trying again to create event " + event.getName() + " on table "
-                        + ndbEvent.getTableName());
+                        + ndbEvent.getTableName() + ".");
 
                 // Try to add it again. Throw an exception if we get another error.
                 returnCode = ndbDictionary.createEvent(ndbEvent);
@@ -203,6 +193,32 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
                 handleError(returnCode, ndbDictionary, "");
             }
         }
+    }
+
+    /**
+     * Create and return an instance of the NDB Event class.
+     * @param event ClusterJ Event to use as template for NDB Event.
+     * @return NDB Event based on the given ClusterJ Event.
+     */
+    private EventConst getNdbEventFromClusterJEvent(com.mysql.clusterj.core.store.Event event) {
+        TableConst ndbTable = ndbDictionary.getTable(event.getTableName());
+        logger.debug("NDB Table has name " + ndbTable.getName() + " and ID " + ndbTable.getTableId() + ".");
+        logger.debug("NDB Table has " + ndbTable.getNoOfColumns() + " column(s).");
+
+        Event ndbEvent = Event.create(event.getName(), ndbTable);
+
+        ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
+        ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
+
+        for (String columnName : event.getEventColumns())
+            ndbEvent.addEventColumn(columnName);
+
+        for (TableEvent tableEvent : event.getTableEvents())
+            ndbEvent.addTableEvent(TableEvent.convert(tableEvent));
+
+        ndbEvent.mergeEvents(false);
+
+        return ndbEvent;
     }
 
     /**
@@ -257,16 +273,32 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
     /**
      * Delete/remove/drop the event identified by the unique event name from the server.
      * @param eventName Unique identifier of the event to be dropped.
-     * @param force Not sure what this does.
+     * @param force If 1, then do not check if event exists before trying to delete it.
      */
-    public void dropEvent(String eventName, int force) {
+    public boolean dropEvent(String eventName, int force) {
         logger.debug("Dropping event " + eventName + ", force = " + force);
         int returnCode = ndbDictionary.dropEvent(eventName, force);
 
+        // We do a bit of error handling here. If the event did not exist, then we just return False.
         if (returnCode != 0) {
             logger.error("Encountered non-zero return code " + returnCode + " after trying to drop event " + eventName);
-            handleError(returnCode, ndbDictionary, "");
+
+            NdbErrorConst ndbError = ndbDictionary.getNdbError();
+
+            int code = ndbError.code();
+            int mysqlCode = ndbError.mysql_code();
+            int classification = ndbError.classification();
+
+            if (classification == 4710 || classification == 4731) {
+                logger.warn("Tried to delete event " + eventName + ", but the event does not exist (ndb code " + code +
+                        ", mysqlCode " + mysqlCode + ", classification " + classification + ").");
+                return false;
+            }
+
+            Utility.throwError(returnCode, ndbError, "");
         }
+
+        return true;
     }
 
     public Dictionary getNdbDictionary() {

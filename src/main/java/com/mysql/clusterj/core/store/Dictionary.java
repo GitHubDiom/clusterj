@@ -46,7 +46,8 @@ public interface Dictionary {
     /**
      * Delete/remove/drop the event identified by the unique event name from the server.
      * @param eventName Unique identifier of the event to be dropped.
-     * @param force Not sure what this does.
+     * @param force If 1, then do not check if event exists before trying to delete it.
+     * @return True if the event was dropped, false if the event did not exist in the first place. 
      */
-    public void dropEvent(String eventName, int force);
+    public boolean dropEvent(String eventName, int force);
 }

@@ -1043,7 +1043,7 @@ public class Utility {
         int classification = ndbError.classification();
         String msg = local.message("ERR_NdbJTie", returnCode, code, mysqlCode, 
                 status, classification, message, extra);
-        if (!NonSevereErrorCodes .contains(code)) {
+        if (!NonSevereErrorCodes.contains(code)) {
             logger.error(msg);
         }
         throw new ClusterJDatastoreException(msg, code, mysqlCode, status, classification);

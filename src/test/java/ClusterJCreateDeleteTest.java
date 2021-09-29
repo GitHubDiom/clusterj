@@ -6,13 +6,14 @@ import org.apache.commons.cli.*;
 
 import java.util.Properties;
 
-public class ClusterJEventTest {
+public class ClusterJCreateDeleteTest {
 
     private static final String DEFAULT_CONNECT_STRING = "10.241.64.15:1186";
     private static final String DEFAULT_DATABASE = "ndb_examples";
     private static final String DEFAULT_TABLE_NAME = "t0";
     private static final String DEFAULT_EVENT_NAME = "MY_EVENT_t0";
     private static final String DEFAULT_DEBUG_STRING = "d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log";
+    private static final String DEFAULT_OPERATION = "create";
 
     private static final int DEFAULT_TIMEOUT = 30;
 
@@ -21,12 +22,17 @@ public class ClusterJEventTest {
 
         Option connectStringOption = new Option(
                 "c", "connect_string", true,
-                "The MySQL NDB connection string. Default: " +  DEFAULT_CONNECT_STRING
+                "The MySQL NDB connection string. Default: " + DEFAULT_CONNECT_STRING
         );
 
         Option databaseOption = new Option(
                 "d", "database", true,
                 "The MySQL database to use. Default: " + DEFAULT_DATABASE
+        );
+
+        Option operationOption = new Option(
+                "o", "operation", true,
+                "Specify the operation to perform. Options are \"create\" or \"delete\". Default: \"create\""
         );
 
         Option tableNameOption = new Option(
@@ -46,7 +52,8 @@ public class ClusterJEventTest {
 
         Option forceOption = new Option(
                 "f", "force", true,
-                "Pass '1' for the force argument to dropEvent(), if a call to that function occurs." +
+                "Only used when dropping an event. If 1, then the drop is attempted without checking if " +
+                        " the event exists first. If 0, then checks if event exists before trying to drop it. " +
                         " Default: 0."
         );
 
@@ -63,6 +70,7 @@ public class ClusterJEventTest {
         options.addOption(timeoutOption);
         options.addOption(forceOption);
         options.addOption(debugStringOption);
+        options.addOption(operationOption);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -82,6 +90,7 @@ public class ClusterJEventTest {
         String tableName = DEFAULT_TABLE_NAME;
         String eventName = DEFAULT_EVENT_NAME;
         String debugString = DEFAULT_DEBUG_STRING;
+        String operation = DEFAULT_OPERATION;
         int timeout = DEFAULT_TIMEOUT;
         int force = 0;
 
@@ -105,6 +114,11 @@ public class ClusterJEventTest {
 
         if (cmd.hasOption("debug_string"))
             debugString = cmd.getOptionValue("debug_string");
+
+        if (cmd.hasOption("operation"))
+            operation = cmd.getOptionValue("operation");
+
+        // assert(operation.equals("create") || operation.equals("delete") || operation.equals("c") || operation.equals("d"));
 
         Dbug dbug = ClusterJHelper.newDbug();
 
@@ -132,77 +146,45 @@ public class ClusterJEventTest {
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
 
-        String[] eventColumnNames = new String[] {
-                "c0",
-                "c1",
-                "c2",
-                "c3",
-                "c4"
-        };
+        if (operation.equals("delete") || operation.equals("drop") || operation.equals("d")) {
+            boolean dropped = session.dropEvent(eventName, force);
 
-        System.out.println("Checking to see if event with name " + eventName + " already exists...");
-        Event event = session.getEvent(eventName);
-
-        System.out.println("Located event: " + (event != null));
-        if (event != null)
-            System.out.println("Event " + eventName + ": " + event);
-
-        session.createAndRegisterEvent(
-                eventName,
-                tableName,
-                eventColumnNames,
-                new TableEvent[] { TableEvent.ALL },
-                force);
-
-        EventOperation eventOperation = session.createEventOperation(eventName);
-
-        RecordAttr[] postAttrs = new RecordAttr[eventColumnNames.length];
-        RecordAttr[] preAttrs = new RecordAttr[eventColumnNames.length];
-
-        for (int i = 0; i < eventColumnNames.length; i++) {
-            String eventColumnName = eventColumnNames[i];
-            RecordAttr postAttr = eventOperation.getValue(eventColumnName);
-            RecordAttr preAttr = eventOperation.getPreValue(eventColumnName);
-
-            System.out.println("PostAttr for " + eventColumnName + ": " + postAttr.toString());
-            System.out.println("PreAttr for " + eventColumnName + ": " + preAttr.toString());
-
-            postAttrs[i] = postAttr;
-            preAttrs[i] = preAttr;
+            System.out.println("Event " + eventName + " dropped: " + dropped);
         }
+        else if (operation.equals("create") || operation.equals("add") || operation.equals("c")) {
+            String[] eventColumnNames = new String[]{
+                    "c0",
+                    "c1",
+                    "c2",
+                    "c3",
+                    "c4"
+            };
 
-        int eventCounter = 0;
-        while (eventCounter < timeout) {
-            boolean foundEvents = session.pollEvents(1000, null);
+            System.out.println("Checking to see if event with name " + eventName + " already exists...");
+            Event event = session.getEvent(eventName);
 
-            System.out.println("Events detected: " + foundEvents);
+            System.out.println("Located event: " + (event != null));
+            if (event != null) {
+                System.out.println("Event " + eventName + ": " + event);
+                System.out.println("Dropping event first...");
 
-            EventOperation nextEventOp = session.nextEvent();
+                boolean dropped = session.dropEvent(eventName, force);
 
-            System.out.println("Initial return value of nextEvent(): " + nextEventOp.toString());
-
-            while (nextEventOp != null) {
-                TableEvent eventType = nextEventOp.getEventType();
-
-                System.out.println("Event #" + eventCounter + ": " + eventType.name());
-
-                for (int i = 0; i < eventColumnNames.length; i++) {
-                    RecordAttr postAttr = postAttrs[i];
-                    RecordAttr preAttr = preAttrs[i];
-
-                    // First two columns are integers, second two are strings.
-                    if (i < 2) {
-                        System.out.println("Pre: " + preAttr.u_32_value());
-                        System.out.println("Post: " + postAttr.u_32_value());
-                    } else {
-                        System.out.println("Pre: " + preAttr.toString());
-                        System.out.println("Post: " + postAttr.toString());
-                    }
+                if (dropped) {
+                    System.out.println("Successfully dropped event " + eventName + ". Trying to re-add it now.");
+                    session.createAndRegisterEvent(
+                            eventName,
+                            tableName,
+                            eventColumnNames,
+                            new TableEvent[] { TableEvent.ALL },
+                            force);
+                } else {
+                    System.out.println("ERROR: Failed to drop existing event " + eventName);
                 }
-
-                nextEventOp = session.nextEvent();
-                eventCounter++;
             }
+        }
+        else {
+            throw new IllegalArgumentException("Unknown operation: " + operation);
         }
     }
 }

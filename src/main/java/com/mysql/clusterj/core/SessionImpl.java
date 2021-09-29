@@ -160,6 +160,11 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
         return dictionary.getEvent(eventName);
     }
 
+    @Override
+    public boolean dropEvent(String eventName, int force) {
+        return dictionary.dropEvent(eventName, force);
+    }
+
     /** Create a query from a query definition.
      * 
      * @param qd the query definition

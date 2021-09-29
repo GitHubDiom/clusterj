@@ -333,4 +333,12 @@ public interface Session {
      * @return The event.
      */
     public Event getEvent(String eventName);
+
+    /**
+     * Drop the event identified by the given name.
+     * @param eventName The unique name of the event to drop.
+     * @param force If 1, then do not check if event exists before trying to delete it.
+     * @return True if the event was dropped, false if the event did not exist in the first place.
+     */
+    public boolean dropEvent(String eventName, int force);
 }
