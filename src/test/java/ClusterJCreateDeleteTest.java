@@ -33,7 +33,7 @@ public class ClusterJCreateDeleteTest {
 
         Option operationOption = new Option(
                 "o", "operation", true,
-                "Specify the operation to perform. Options are \"create\", \"delete\", \"list\". " +
+                "Specify the operation to perform. Options are \"create\", \"delete\", \"list\", \"get\", " +
                         "Default: \"create\""
         );
 
@@ -192,6 +192,14 @@ public class ClusterJCreateDeleteTest {
             for(int i = 0; i < eventNames.size(); i++) {
                 System.out.println("\t #" + i + ": " + eventNames.get(i));
             }
+        }
+        else if (operation.equals("get") || operation.equals("g")) {
+            Event event = session.getEvent(eventName);
+
+            if (event != null)
+                System.out.println("Retrieved event: " + event.toString());
+            else
+                System.out.println("[ERROR] Failed to retrieve event with name \"" + eventName + "\"");
         }
         else {
             throw new IllegalArgumentException("Unknown operation: " + operation);
