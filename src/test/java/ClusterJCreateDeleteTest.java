@@ -186,5 +186,9 @@ public class ClusterJCreateDeleteTest {
         else {
             throw new IllegalArgumentException("Unknown operation: " + operation);
         }
+
+        System.out.println("Exiting now.");
+
+        session.close();
     }
 }
