@@ -208,5 +208,7 @@ public class ClusterJCreateDeleteTest {
         System.out.println("Exiting now.");
 
         session.close();
+
+        System.out.println("Closed connection to NDB cluster.");
     }
 }
