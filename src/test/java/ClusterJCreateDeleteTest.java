@@ -162,28 +162,8 @@ public class ClusterJCreateDeleteTest {
                     "c4"
             };
 
-            System.out.println("Checking to see if event with name " + eventName + " already exists...");
-            Event event = session.getEvent(eventName);
-
-            System.out.println("Located event: " + (event != null));
-            if (event != null) {
-                System.out.println("Event " + eventName + ": " + event);
-                System.out.println("Dropping event first...");
-
-                boolean dropped = session.dropEvent(eventName, force);
-
-                if (dropped) {
-                    System.out.println("Successfully dropped event " + eventName + ". Trying to re-add it now.");
-                    session.createAndRegisterEvent(
-                            eventName,
-                            tableName,
-                            eventColumnNames,
-                            new TableEvent[] { TableEvent.ALL },
-                            force);
-                } else {
-                    System.out.println("ERROR: Failed to drop existing event " + eventName);
-                }
-            }
+            session.createAndRegisterEvent(
+                    eventName, tableName, eventColumnNames, new TableEvent[] {TableEvent.ALL},0);
         }
         else if (operation.equals("list") || operation.equals("l")) {
             List<String> eventNames = session.getEventNames();
