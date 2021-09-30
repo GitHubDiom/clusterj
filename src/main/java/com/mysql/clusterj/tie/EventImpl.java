@@ -58,8 +58,6 @@ public class EventImpl implements Event {
 
         //this.ndbEvent = ndbEvent;
         this.table = table;
-
-        logger.debug("Created Event: " + this.toString());
     }
 
     /**

@@ -209,8 +209,8 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
         Event ndbEvent = Event.create(event.getName(), ndbTable);
 
-        ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
-        ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
+        //ndbEvent.setDurability(com.mysql.clusterj.EventDurability.convert(event.getDurability()));
+        //ndbEvent.setReport(com.mysql.clusterj.EventReport.convert(event.getReport()));
 
         for (String columnName : event.getEventColumns())
             ndbEvent.addEventColumn(columnName);
