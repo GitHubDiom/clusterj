@@ -161,6 +161,11 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     }
 
     @Override
+    public List<String> getEventNames() {
+        return dictionary.getEventNames();
+    }
+
+    @Override
     public boolean dropEvent(String eventName, int force) {
         return dictionary.dropEvent(eventName, force);
     }

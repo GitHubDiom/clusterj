@@ -40,7 +40,9 @@ import com.mysql.clusterj.core.store.Table;
 import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -305,4 +307,30 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
         return ndbDictionary;
     }
 
+    /**
+     * Return a list containing the names of all active/registered NDB events with the current database.
+     * @return List of NDB Event names.
+     */
+    public List<String> getEventNames() {
+        DictionaryConst.List list = DictionaryConst.List.create();
+        int returnCode = ndbDictionary.listEvents(list);
+
+        if (returnCode != 0)
+            handleError(returnCode, ndbDictionary, "");
+
+        int numElements = list.count();
+        ElementArray listElements = list.elements();
+
+        List<String> eventNames = new ArrayList<String>();
+
+        for (int i = 0; i < numElements; i++) {
+            Element listElement = listElements.at(i);
+            String event = "Event(name=" + listElement.name() + ", id=" + listElement.id() +
+                    ", database=" + listElement.database() + ", schema=" + listElement.schema();
+
+            eventNames.add(event);
+        }
+
+        return eventNames;
+    }
 }

@@ -4,6 +4,7 @@ import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
 import org.apache.commons.cli.*;
 
+import java.util.List;
 import java.util.Properties;
 
 public class ClusterJCreateDeleteTest {
@@ -32,7 +33,8 @@ public class ClusterJCreateDeleteTest {
 
         Option operationOption = new Option(
                 "o", "operation", true,
-                "Specify the operation to perform. Options are \"create\" or \"delete\". Default: \"create\""
+                "Specify the operation to perform. Options are \"create\", \"delete\", \"list\". " +
+                        "Default: \"create\""
         );
 
         Option tableNameOption = new Option(
@@ -181,6 +183,14 @@ public class ClusterJCreateDeleteTest {
                 } else {
                     System.out.println("ERROR: Failed to drop existing event " + eventName);
                 }
+            }
+        }
+        else if (operation.equals("list") || operation.equals("l")) {
+            List<String> eventNames = session.getEventNames();
+
+            System.out.println("Events: ");
+            for(int i = 0; i < eventNames.size(); i++) {
+                System.out.println("\t #" + i + ": " + eventNames.get(i));
             }
         }
         else {

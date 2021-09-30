@@ -23,6 +23,8 @@ import com.mysql.clusterj.query.QueryBuilder;
 import com.mysql.clusterj.query.QueryDefinition;
 import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 
+import java.util.List;
+
 /** Session is the primary user interface to the cluster.
  *
  */
@@ -341,4 +343,10 @@ public interface Session {
      * @return True if the event was dropped, false if the event did not exist in the first place.
      */
     public boolean dropEvent(String eventName, int force);
+
+    /**
+     * Return a list containing the names of all active/registered NDB events with the current database.
+     * @return List of NDB Event names.
+     */
+    public List<String> getEventNames();
 }
