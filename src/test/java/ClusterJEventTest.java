@@ -154,7 +154,7 @@ public class ClusterJEventTest {
         System.out.println("Checking to see if event with name " + eventName + " already exists...");
         Event event = session.getEvent(eventName);
 
-        System.out.println("Located event: " + (event != null));
+        System.out.println("Event " + eventName + " already exists: " + (event != null));
         boolean alreadyExists = false;
         if (event != null) {
             System.out.println("Event " + eventName + ": " + event);
@@ -165,13 +165,16 @@ public class ClusterJEventTest {
         //      (1) does not already exist
         //      (2) does already exist AND we're supposed to delete and (re)create it
         // then go ahead and create and register the event (which will delete and recreate it if necessary)
-        if (!alreadyExists || (alreadyExists && deleteIfExists))
+        if (!alreadyExists || (alreadyExists && deleteIfExists)) {
             session.createAndRegisterEvent(
                     eventName,
                     tableName,
                     eventColumnNames,
                     new TableEvent[] { TableEvent.ALL },
                     force);
+        } else {
+            System.out.println("Will re-use existing event " + eventName + ".");
+        }
 
         EventOperation eventOperation = session.createEventOperation(eventName);
 
