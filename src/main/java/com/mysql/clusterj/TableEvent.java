@@ -53,7 +53,7 @@ public enum TableEvent {
                 return SUBSCRIBE;
             case 1 << 12:
                 return UNSUBSCRIBE;
-            case 1 << 0XFFFF:
+            case 0XFFFF:
                 return ALL;
             default:
                 throw new IllegalArgumentException("Unknown TableEvent: " + event);
@@ -72,7 +72,7 @@ public enum TableEvent {
     public static int convert(TableEvent event) {
         switch (event) {
             case INSERT:
-                return 1 << 0;
+                return 1;
             case DELETE:
                 return 1 << 1;
             case UPDATE:
@@ -96,7 +96,7 @@ public enum TableEvent {
             case UNSUBSCRIBE:
                 return 1 << 12;
             case ALL:
-                return 1 << 0XFFFF;
+                return 0xFFFF;
             default:
                 throw new IllegalArgumentException("Unknown TableEvent: " + event);
         }
