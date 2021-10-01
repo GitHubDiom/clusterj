@@ -181,6 +181,7 @@ public class ClusterJEventTest {
         RecordAttr[] postAttrs = new RecordAttr[eventColumnNames.length];
         RecordAttr[] preAttrs = new RecordAttr[eventColumnNames.length];
 
+        System.out.println("Creating record attributes for the event columns now...");
         for (int i = 0; i < eventColumnNames.length; i++) {
             String eventColumnName = eventColumnNames[i];
             RecordAttr postAttr = eventOperation.getValue(eventColumnName);
@@ -193,6 +194,7 @@ public class ClusterJEventTest {
             preAttrs[i] = preAttr;
         }
 
+        System.out.println("Polling for events now...");
         int eventCounter = 0;
         while (eventCounter < timeout) {
             boolean foundEvents = session.pollEvents(1000, null);
