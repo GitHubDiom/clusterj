@@ -183,7 +183,7 @@ public class ClusterJEventTest {
 
         System.out.println("Creating record attributes for the event columns now...");
         for (int i = 0; i < eventColumnNames.length; i++) {
-            System.out.println("\tCreating attributes for column " + (i + 1) + "/" + eventColumnNames.length));
+            System.out.println("\tCreating attributes for column " + (i + 1) + "/" + eventColumnNames.length);
             String eventColumnName = eventColumnNames[i];
             RecordAttr postAttr = eventOperation.getValue(eventColumnName);
             RecordAttr preAttr = eventOperation.getPreValue(eventColumnName);
