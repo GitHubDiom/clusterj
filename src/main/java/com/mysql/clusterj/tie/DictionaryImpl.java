@@ -190,6 +190,8 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
                 // Try to add it again. Throw an exception if we get another error.
                 returnCode = ndbDictionary.createEvent(ndbEvent);
                 if (returnCode != 0) handleError(returnCode, ndbDictionary, "");
+
+                logger.debug("Successfully created event " + event.getName() + ".");
             } else {
                 // There was some other error (i.e., it wasn't that the event already exists).
                 handleError(returnCode, ndbDictionary, "");

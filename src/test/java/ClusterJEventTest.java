@@ -56,6 +56,12 @@ public class ClusterJEventTest {
                         "Default is: \"d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log\""
         );
 
+        Option deleteIfExistsOption = new Option(
+                "del", "delete_if_exists", false,
+                "If passed, then delete the event and recreate it if it already exists. If not passed," +
+                        "then this will simply try to use the existing event if it discovers it."
+        );
+
         options.addOption(connectStringOption);
         options.addOption(databaseOption);
         options.addOption(tableNameOption);
@@ -63,6 +69,7 @@ public class ClusterJEventTest {
         options.addOption(timeoutOption);
         options.addOption(forceOption);
         options.addOption(debugStringOption);
+        options.addOption(deleteIfExistsOption);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -106,6 +113,10 @@ public class ClusterJEventTest {
         if (cmd.hasOption("debug_string"))
             debugString = cmd.getOptionValue("debug_string");
 
+        boolean deleteIfExists = false;
+        if (cmd.hasOption("delete_if_exists"))
+            deleteIfExists = true;
+
         Dbug dbug = ClusterJHelper.newDbug();
 
         // Pause execution.
@@ -144,15 +155,23 @@ public class ClusterJEventTest {
         Event event = session.getEvent(eventName);
 
         System.out.println("Located event: " + (event != null));
-        if (event != null)
+        boolean alreadyExists = false;
+        if (event != null) {
             System.out.println("Event " + eventName + ": " + event);
+            alreadyExists = true;
+        }
 
-        session.createAndRegisterEvent(
-                eventName,
-                tableName,
-                eventColumnNames,
-                new TableEvent[] { TableEvent.ALL },
-                force);
+        // If the event either:
+        //      (1) does not already exist
+        //      (2) does already exist AND we're supposed to delete and (re)create it
+        // then go ahead and create and register the event (which will delete and recreate it if necessary)
+        if (!alreadyExists || (alreadyExists && deleteIfExists))
+            session.createAndRegisterEvent(
+                    eventName,
+                    tableName,
+                    eventColumnNames,
+                    new TableEvent[] { TableEvent.ALL },
+                    force);
 
         EventOperation eventOperation = session.createEventOperation(eventName);
 
