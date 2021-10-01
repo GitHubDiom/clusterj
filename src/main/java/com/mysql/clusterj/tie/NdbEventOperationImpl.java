@@ -27,12 +27,16 @@ public class NdbEventOperationImpl implements EventOperation {
 
     private final NdbEventOperation ndbEventOperation;
 
-    private final TableEvent eventType;
+    /**
+     * Set on creation of this object. Only when this object is created by the API call to nextEvent()
+     * (and the result of nextEvent() is non-null) will this be set to true.
+     */
+    private final boolean canCallNextEvent;
 
-    public NdbEventOperationImpl(NdbEventOperation ndbEventOperation, Db db) {
+    protected NdbEventOperationImpl(NdbEventOperation ndbEventOperation, Db db, boolean canCallNextEvent) {
         this.db = (DbImpl)db;
-        this.eventType = TableEvent.convert(ndbEventOperation.getEventType());
         this.ndbEventOperation = ndbEventOperation;
+        this.canCallNextEvent = canCallNextEvent;
     }
 
     public int isOverrun() {
@@ -56,10 +60,19 @@ public class NdbEventOperationImpl implements EventOperation {
      *
      * Only valid after Ndb::nextEvent() has been called and returned a non-NULL value
      *
+     * WARNING: This may cause a segmentation fault if called before Ndb::nextEvent() has been
+     * called and returned a non-NULL value...
+     *
      * @return type of event
      */
     public TableEvent getEventType() {
-        return eventType;
+        if (canCallNextEvent)
+            throw new IllegalStateException("This instance was not returned by a call to Ndb.nextEvent() and thus " +
+                    "it cannot return an event type.");
+
+        int eventTypeAsInt = this.ndbEventOperation.getEventType();
+
+        return TableEvent.convert(eventTypeAsInt);
     }
 
     /**

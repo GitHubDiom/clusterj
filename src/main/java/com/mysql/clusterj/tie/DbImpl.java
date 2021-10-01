@@ -529,7 +529,7 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
 
         logger.debug("Successfully created NDB Event Operation for event " + eventName + ".");
 
-        return new NdbEventOperationImpl(ndbEventOperation, this);
+        return new NdbEventOperationImpl(ndbEventOperation, this, false);
     }
 
     public boolean dropEventOperation(NdbEventOperation eventOp) {
@@ -564,7 +564,7 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
 
         if (ndbEventOperation != null) {
             logger.debug("nextEvent() returned a non-null value!");
-            return new NdbEventOperationImpl(ndbEventOperation, this);
+            return new NdbEventOperationImpl(ndbEventOperation, this, true);
         }
 
         return null;
