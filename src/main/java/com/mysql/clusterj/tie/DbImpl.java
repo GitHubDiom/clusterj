@@ -527,6 +527,8 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
             return null;
         }
 
+        logger.debug("Successfully created NDB Event Operation for event " + eventName + ".");
+
         return new NdbEventOperationImpl(ndbEventOperation, this);
     }
 
