@@ -14,7 +14,7 @@ public class ClusterJEventTest {
     private static final String DEFAULT_EVENT_NAME = "MY_EVENT_t0";
     private static final String DEFAULT_DEBUG_STRING = "d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log";
 
-    private static final int DEFAULT_TIMEOUT = 30;
+    private static final int DEFAULT_EVENT_LIMIT = 30;
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -40,8 +40,8 @@ public class ClusterJEventTest {
         );
 
         Option timeoutOption = new Option(
-                "t", "timeout", true,
-                "Number of events to listen for before stopping. Default: " + DEFAULT_TIMEOUT
+                "t", "event_limit", true,
+                "Number of events to listen for before stopping. Default: " + DEFAULT_EVENT_LIMIT
         );
 
         Option forceOption = new Option(
@@ -89,7 +89,7 @@ public class ClusterJEventTest {
         String tableName = DEFAULT_TABLE_NAME;
         String eventName = DEFAULT_EVENT_NAME;
         String debugString = DEFAULT_DEBUG_STRING;
-        int timeout = DEFAULT_TIMEOUT;
+        int eventLimit = DEFAULT_EVENT_LIMIT;
         int force = 0;
 
         if (cmd.hasOption("connect_string"))
@@ -104,8 +104,8 @@ public class ClusterJEventTest {
         if (cmd.hasOption("table_name"))
             tableName = cmd.getOptionValue("table_name");
 
-        if (cmd.hasOption("timeout"))
-            timeout = Integer.parseInt(cmd.getOptionValue("timeout"));
+        if (cmd.hasOption("event_limit"))
+            eventLimit = Integer.parseInt(cmd.getOptionValue("event_limit"));
 
         if (cmd.hasOption("force"))
             force = Integer.parseInt(cmd.getOptionValue("force"));
@@ -140,7 +140,7 @@ public class ClusterJEventTest {
         System.out.println("Target database: " + database);
         System.out.println("Target table: " + tableName);
         System.out.println("Event name: " + eventName);
-        System.out.println("Timeout: " + timeout);
+        System.out.println("Event limit: " + eventLimit);
         System.out.println("Force: " + force);
         System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 
@@ -204,9 +204,9 @@ public class ClusterJEventTest {
         System.out.println("Executing Event Operation for event " + eventName + " now...");
         eventOperation.execute();
 
-        System.out.println("Polling for a maximum of " + timeout + " events now...");
+        System.out.println("Polling until a total of " + eventLimit + " events are received now...");
         int eventCounter = 0;
-        while (eventCounter < timeout) {
+        while (eventCounter < eventLimit) {
             boolean foundEvents = session.pollEvents(1000, null);
 
             if (!foundEvents) {
