@@ -66,7 +66,7 @@ public class NdbEventOperationImpl implements EventOperation {
      * @return type of event
      */
     public TableEvent getEventType() {
-        if (canCallNextEvent)
+        if (!canCallNextEvent)
             throw new IllegalStateException("This instance was not returned by a call to Ndb.nextEvent() and thus " +
                     "it cannot return an event type.");
 
