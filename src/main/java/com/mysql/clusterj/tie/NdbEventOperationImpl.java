@@ -165,8 +165,8 @@ public class NdbEventOperationImpl implements EventOperation {
     public RecordAttr getPreValue(String anAttrName) {
         ByteBuffer aValue = ByteBuffer.allocateDirect(64); // Big enough.
 
-        logger.debug("Getting value for operation. Attribute name: " + anAttrName);
-        NdbRecAttr ndbRecAttr = ndbEventOperation.getValue(anAttrName, aValue);
+        logger.debug("Getting pre-value for operation. Attribute name: " + anAttrName);
+        NdbRecAttr ndbRecAttr = ndbEventOperation.getPreValue(anAttrName, aValue);
 
         return new NdbRecordAttrImpl(ndbRecAttr, null, aValue);
     }
