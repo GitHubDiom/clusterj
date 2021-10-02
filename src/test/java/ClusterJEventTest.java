@@ -199,10 +199,13 @@ public class ClusterJEventTest {
 
         System.out.println("Polling for a maximum of " + timeout + " events now...");
         int eventCounter = 0;
+        int badStreak = 0;
         while (eventCounter < timeout) {
             boolean foundEvents = session.pollEvents(1000, null);
 
-            System.out.println("Events detected: " + foundEvents);
+            if (!foundEvents) {
+                continue;
+            }
 
             EventOperation nextEventOp = session.nextEvent();
 
