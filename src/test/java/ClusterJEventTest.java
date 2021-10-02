@@ -186,10 +186,15 @@ public class ClusterJEventTest {
             System.out.println("\tCreating/retrieving attributes for column " + (i + 1) + "/" + eventColumnNames.length);
             String eventColumnName = eventColumnNames[i];
             RecordAttr postAttr = eventOperation.getValue(eventColumnName);
+
+            System.out.println("\tSuccessfully retrieved post-value record attribute for column " + eventColumnName);
+
             RecordAttr preAttr = eventOperation.getPreValue(eventColumnName);
 
-            System.out.println("PostAttr for " + eventColumnName + ": " + postAttr.toString());
-            System.out.println("PreAttr for " + eventColumnName + ": " + preAttr.toString());
+            System.out.println("\tSuccessfully retrieved pre-value record attribute for column " + eventColumnName);
+
+            System.out.println("\tPostAttr for " + eventColumnName + ": " + postAttr.toString());
+            System.out.println("\tPreAttr for " + eventColumnName + ": " + preAttr.toString());
 
             postAttrs[i] = postAttr;
             preAttrs[i] = preAttr;
