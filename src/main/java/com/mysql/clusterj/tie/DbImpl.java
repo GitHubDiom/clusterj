@@ -549,8 +549,6 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
         // pollEvents returns < 0 on failure, 0 if no events are available, and 1 if there are events available.
         int returnCode = this.ndb.pollEvents(aMillisecondNumber, latestGCI);
 
-        logger.debug("ndb.pollEvents() returned " + returnCode);
-
         if (returnCode < 0) {
             handleError(returnCode, ndb);
             return false;

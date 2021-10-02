@@ -117,6 +117,10 @@ public class ClusterJEventTest {
         if (cmd.hasOption("delete_if_exists"))
             deleteIfExists = true;
 
+        if (cmd.hasOption("suppressClusterJDebugOption")) {
+
+        }
+
         Dbug dbug = ClusterJHelper.newDbug();
 
         // Pause execution.
@@ -197,9 +201,11 @@ public class ClusterJEventTest {
             preAttrs[i] = preAttr;
         }
 
+        System.out.println("Executing Event Operation for event " + eventName + " now...");
+        eventOperation.execute();
+
         System.out.println("Polling for a maximum of " + timeout + " events now...");
         int eventCounter = 0;
-        int badStreak = 0;
         while (eventCounter < timeout) {
             boolean foundEvents = session.pollEvents(1000, null);
 
