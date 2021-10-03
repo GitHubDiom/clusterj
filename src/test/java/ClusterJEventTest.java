@@ -169,7 +169,7 @@ public class ClusterJEventTest {
         //      (1) does not already exist
         //      (2) does already exist AND we're supposed to delete and (re)create it
         // then go ahead and create and register the event (which will delete and recreate it if necessary)
-        if (!alreadyExists || (alreadyExists && deleteIfExists)) {
+        if (!alreadyExists || deleteIfExists) {
             session.createAndRegisterEvent(
                     eventName,
                     tableName,
