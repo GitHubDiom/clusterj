@@ -4,6 +4,7 @@ import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
 import org.apache.commons.cli.*;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 public class ClusterJEventTest {
@@ -125,7 +126,7 @@ public class ClusterJEventTest {
         if (cmd.hasOption("delete_if_exists"))
             deleteIfExists = true;
 
-        if (cmd.hasOption("event_limit"))
+        if (cmd.hasOption("event_col_name_set"))
             eventColumnNameSet = Integer.parseInt(cmd.getOptionValue("event_col_name_set"));
 
         Dbug dbug = ClusterJHelper.newDbug();
@@ -178,6 +179,8 @@ public class ClusterJEventTest {
             eventColumnNames = eventColumnNames2;
         else
             throw new IllegalArgumentException("Invalid EventColumnName set specified: " + eventColumnNameSet);
+
+        System.out.println("Event column names: " + Arrays.toString(eventColumnNames));
 
         System.out.println("Checking to see if event with name " + eventName + " already exists...");
         Event event = session.getEvent(eventName);
