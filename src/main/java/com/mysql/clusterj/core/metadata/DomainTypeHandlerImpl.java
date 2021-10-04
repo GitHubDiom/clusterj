@@ -55,7 +55,6 @@ import java.util.Map;
  * Persistent properties consist of a pair of bean-pattern methods for which the
  * get method returns the same type as the parameter of the 
  * similarly-named set method.
- * @param T the class of the persistence-capable type
  */
 public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
 

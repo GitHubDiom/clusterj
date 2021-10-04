@@ -129,7 +129,39 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
         transactionState = transactionStateNotActive;
     }
 
-    public void createAndRegisterEvent(String eventName,
+    /**
+     * Create and register an NDB event with the server.
+     *
+     * @param eventName The unique name to identify the event with.
+     * @param tableName The table with which the event should be associated.
+     * @param tableEvents The events that this event should listen for.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists.
+     * @return The event object that was created and registered.
+     */
+    public Event createAndRegisterEvent(String eventName,
+                                        String tableName,
+                                        TableEvent[] tableEvents,
+                                        int force) {
+        Table table = dictionary.getTable(tableName);
+
+        if (table == null)
+            throw new IllegalArgumentException("Invalid table specified: \"" + tableName
+                    + "\". Table does not exist.");
+
+        return createAndRegisterEventImpl(eventName, table, table.getColumnNames(), tableEvents, force);
+    }
+
+    /**
+     * Create and register an NDB event with the server.
+     *
+     * @param eventName The unique name to identify the event with.
+     * @param tableName The table with which the event should be associated.
+     * @param eventColumns The columns that are being monitored for the event.
+     * @param tableEvents The events that this event should listen for.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists.
+     * @return The event object that was created and registered.
+     */
+    public Event createAndRegisterEvent(String eventName,
                                        String tableName,
                                        String[] eventColumns,
                                        TableEvent[] tableEvents,
@@ -140,6 +172,29 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
             throw new IllegalArgumentException("Invalid table specified: \"" + tableName
                     + "\". Table does not exist.");
 
+        return createAndRegisterEventImpl(eventName, table, eventColumns, tableEvents, force);
+    }
+
+    /**
+     * This method just calls the corresponding method of the dictionary object.
+     *
+     * The two public versions of this method accept slightly different arguments. They ultimately just
+     * call this function.
+     *
+     *
+     * @param eventName The unique name to identify the event with.
+     * @param table The table on which the event should be associated.
+     * @param eventColumns The columns that are being monitored for the event.
+     * @param tableEvents The events that this event should listen for.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists.
+     * @return The event object that was created and registered.
+     */
+    private Event createAndRegisterEventImpl(
+            String eventName,
+            Table table,
+            String[] eventColumns,
+            TableEvent[] tableEvents,
+            int force) {
         Event event = new EventImpl(
                 eventName,
                 EventDurability.PERMANENT,
@@ -149,6 +204,8 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                 tableEvents);
 
         dictionary.createAndRegisterEvent(event, force);
+
+        return event;
     }
 
     /**

@@ -248,13 +248,14 @@ public interface Session {
      * @param eventName
      *        unique identifier of the event
      *
-     * @return Object representing an event, NULL on failure
+     * @return Object representing an event operation, NULL on failure
      */
     public EventOperation createEventOperation(String eventName);
 
     /**
      * Create and register an event with the database. The event will be identified by the provided event name and
      * will be associated with the specified table.
+     *
      * @param eventName The unique name to identify the event with.
      * @param tableName The table with which the event should be associated.
      * @param eventColumns The columns that are being monitored for the event.
@@ -262,11 +263,27 @@ public interface Session {
      * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
      *              and we must drop the existing event first.
      */
-    public void createAndRegisterEvent(String eventName,
+    public Event createAndRegisterEvent(String eventName,
                                        String tableName,
                                        String[] eventColumns,
                                        TableEvent[] tableEvents,
                                        int force);
+
+    /**
+     * Create and register an event with the database. The event will be identified by the provided event name and
+     * will be associated with the specified table. The event will be created on/for ALL table columns of the
+     * associated table.
+     *
+     * @param eventName The unique name to identify the event with.
+     * @param tableName The table with which the event should be associated.
+     * @param tableEvents The events that this event should listen for.
+     * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
+     *              and we must drop the existing event first.
+     */
+    public Event createAndRegisterEvent(String eventName,
+                                        String tableName,
+                                        TableEvent[] tableEvents,
+                                        int force);
 
     /**
      * Drop a subscription to an event.
