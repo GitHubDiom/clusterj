@@ -32,10 +32,9 @@ import com.mysql.clusterj.core.util.I18NHelper;
 import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 
-import com.mysql.ndbjtie.ndbapi.Ndb;
-import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
-import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
-import com.mysql.ndbjtie.ndbapi.NdbTransaction;
+import com.mysql.ndbjtie.ndbapi.*;
+import com.mysql.ndbjtie.ndbapi.NdbIndexScanOperation.IndexBound;
+import com.mysql.ndbjtie.ndbapi.NdbScanOperation.ScanOptions;
 import com.mysql.ndbjtie.ndbapi.NdbDictionary.Dictionary;
 
 /**
@@ -160,6 +159,35 @@ class DbImplForNdbRecord implements com.mysql.clusterj.core.store.Db {
 
     public NdbTransaction joinTransaction(String coordinatedTransactionId) {
         throw new ClusterJFatalInternalException(local.message("ERR_Implementation_Should_Not_Occur"));
+    }
+
+    /** Initialize ndbjtie infrastructure for query objects created via jtie wrapper create methods.
+     * Creating them here avoids race conditions later with multiple threads trying to create
+     * them simultaneously. The initialization only needs to be done once.
+     */
+    protected void initializeQueryObjects() {
+        synchronized(ClusterConnectionImpl.class) {
+            if (ClusterConnectionImpl.queryObjectsInitialized) {
+                return;
+            }
+            IndexBound indexBound = IndexBound.create();
+            if (indexBound != null) IndexBound.delete(indexBound);
+            ScanOptions scanOptions = ScanOptions.create();
+            if (scanOptions != null) ScanOptions.delete(scanOptions);
+            NdbDictionary.Table table = NdbDictionary.Table.create("dummy");
+            if (table != null) {
+                NdbInterpretedCode ndbInterpretedCode = NdbInterpretedCode.create(table, null, 0);
+                if (ndbInterpretedCode != null) {
+                    NdbScanFilter ndbScanFilter = NdbScanFilter.create(ndbInterpretedCode);
+                    if (ndbScanFilter != null) {
+                        NdbScanFilter.delete(ndbScanFilter);
+                    }
+                    NdbInterpretedCode.delete(ndbInterpretedCode);
+                }
+                NdbDictionary.Table.delete(table);
+            }
+            ClusterConnectionImpl.queryObjectsInitialized = true;
+        }
     }
 
 }

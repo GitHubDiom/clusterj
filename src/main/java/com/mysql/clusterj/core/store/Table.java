@@ -26,6 +26,11 @@ public interface Table {
 
     String getName();
 
+    /**
+     * Get the key for this table, including projected column identifier
+     */
+    String getKey();
+
     /** Get the names of the primary key columns */
     String[] getPrimaryKeyColumnNames();
 
@@ -40,6 +45,12 @@ public interface Table {
 
     /** Get the names of all columns for this table */
     String[] getColumnNames();
+
+    /** Get the names of all projected columns for this table */
+    String[] getProjectedColumnNames();
+
+    /** Set the names of all projected columns for this table */
+    void setProjectedColumnNames(String[] names);
 
     /** Get the autoincrement column; null if no autoincrement column defined */
     Column getAutoIncrementColumn();

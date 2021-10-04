@@ -11,6 +11,7 @@ com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$22.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$SubscriptionStatus.class
 com\mysql\clusterj\annotation\PersistenceCapable.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$LocalCheckpointCompleted.class
+com\mysql\clusterj\annotation\Projection.class
 com\mysql\clusterj\core\query\OrPredicateImpl.class
 com\mysql\clusterj\core\util\I18NHelper$1.class
 com\mysql\clusterj\tie\IndexScanOperationImpl.class
@@ -168,6 +169,7 @@ com\mysql\clusterj\core\query\CandidateIndexImpl$CandidateColumnImpl.class
 com\mysql\jtie\Wrapper.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NR_CopyFragsStarted.class
 com\mysql\clusterj\ColumnType.class
+com\mysql\clusterj\tie\FixedByteBufferPoolImpl.class
 com\mysql\clusterj\tie\ResultDataImpl.class
 com\mysql\ndbjtie\ndbapi\NdbOperationConst$Type.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_mgm_event_severity.class
@@ -392,6 +394,7 @@ com\mysql\ndbjtie\ndbapi\NdbScanFilter$Error.class
 com\mysql\clusterj\EventDurability.class
 com\mysql\ndbjtie\ndbapi\NdbLockHandleConst.class
 com\mysql\ndbjtie\ndbapi\NdbErrorConst.class
+com\mysql\clusterj\tie\VariableByteBufferPoolImpl.class
 com\mysql\ndbjtie\ndbapi\NdbOperation$OperationOptions.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$DictionaryConst$ListConst$ElementConstArray.class
 com\mysql\clusterj\core\metadata\DomainTypeHandlerImpl.class

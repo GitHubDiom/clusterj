@@ -44,6 +44,7 @@ import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,9 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
     /** The properties */
     protected Map<?, ?> props;
 
+    /** My class loader */
+    static final ClassLoader SESSION_FACTORY_IMPL_CLASS_LOADER = SessionFactoryImpl.class.getClassLoader();
+
     /** NdbCluster connect properties */
     String CLUSTER_CONNECTION_SERVICE;
     String CLUSTER_CONNECT_STRING;
@@ -73,7 +77,7 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
     int CLUSTER_CONNECT_AUTO_INCREMENT_BATCH_SIZE;
     long CLUSTER_CONNECT_AUTO_INCREMENT_STEP;
     long CLUSTER_CONNECT_AUTO_INCREMENT_START;
-
+    int[] CLUSTER_BYTE_BUFFER_POOL_SIZES;
 
     /** Node ids obtained from the property PROPERTY_CONNECTION_POOL_NODEIDS */
     List<Integer> nodeIds = new ArrayList<Integer>();
@@ -108,7 +112,7 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
      */
     protected ClusterConnectionService getClusterConnectionService() {
         return ClusterJHelper.getServiceInstance(ClusterConnectionService.class,
-                    CLUSTER_CONNECTION_SERVICE);
+                CLUSTER_CONNECTION_SERVICE, SESSION_FACTORY_IMPL_CLASS_LOADER);
     }
 
     /** The smart value handler factory */
@@ -139,6 +143,7 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
             // if not using connection pooling, create a new session factory
             result = new SessionFactoryImpl(props);
         }
+        System.out.println("HopsFS created a ClusterJ 7.5.6 sesseion factory.");
         return result;
     }
 
@@ -184,17 +189,47 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
         CLUSTER_CONNECT_AUTO_INCREMENT_START = getLongProperty(props, PROPERTY_CLUSTER_CONNECT_AUTO_INCREMENT_START,
                 Constants.DEFAULT_PROPERTY_CLUSTER_CONNECT_AUTO_INCREMENT_START);
         CLUSTER_CONNECTION_SERVICE = getStringProperty(props, PROPERTY_CLUSTER_CONNECTION_SERVICE);
+        CLUSTER_BYTE_BUFFER_POOL_SIZES = getByteBufferPoolSizes(props);
         createClusterConnectionPool();
-        // now get a Session and complete a transaction to make sure that the cluster is ready
+//        // now get a Session and complete a transaction to make sure that the cluster is ready
+//        try {
+//            Session session = getSession(null);
+//            session.currentTransaction().begin();
+//            session.currentTransaction().commit();
+//            session.close();
+//        } catch (Exception e) {
+//            if (e instanceof ClusterJException) {
+//                logger.warn(local.message("ERR_Session_Factory_Impl_Failed_To_Complete_Transaction"));
+//                throw (ClusterJException)e;
+//            }
+//        }
+        // now get a Session for each connection in the pool and
+        // complete a transaction to make sure that each connection is ready
+        List<Integer> sessionCounts = null;
         try {
-            Session session = getSession(null);
-            session.currentTransaction().begin();
-            session.currentTransaction().commit();
-            session.close();
+            List<Session> sessions = new ArrayList<Session>(pooledConnections.size());
+            for (ClusterConnection connection: pooledConnections) {
+                sessions.add(getSession(null));
+            }
+            sessionCounts = getConnectionPoolSessionCounts();
+            for (Session session: sessions) {
+                session.currentTransaction().begin();
+                session.currentTransaction().commit();
+                session.close();
+            }
         } catch (Exception e) {
             if (e instanceof ClusterJException) {
                 logger.warn(local.message("ERR_Session_Factory_Impl_Failed_To_Complete_Transaction"));
                 throw (ClusterJException)e;
+            }
+        }
+
+        // verify that the session counts were correct
+        for (Integer count: sessionCounts) {
+            if (count != 1) {
+                throw new ClusterJFatalInternalException(
+                        local.message("ERR_Session_Counts_Wrong_Creating_Factory",
+                                sessionCounts.toString()));
             }
         }
     }
@@ -251,9 +286,11 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
 
     protected ClusterConnection createClusterConnection(
             ClusterConnectionService service, Map<?, ?> props, int nodeId) {
+        int[] byteBufferPoolSizes = getByteBufferPoolSizes(props);
         ClusterConnection result = null;
         try {
             result = service.create(CLUSTER_CONNECT_STRING, nodeId, CLUSTER_CONNECT_TIMEOUT_MGM);
+            result.setByteBufferPoolSizes(CLUSTER_BYTE_BUFFER_POOL_SIZES);
             result.connect(CLUSTER_CONNECT_RETRIES, CLUSTER_CONNECT_DELAY,true);
             result.waitUntilReady(CLUSTER_CONNECT_TIMEOUT_BEFORE,CLUSTER_CONNECT_TIMEOUT_AFTER);
         } catch (Exception ex) {
@@ -271,6 +308,26 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
                 CLUSTER_CONNECT_AUTO_INCREMENT_STEP,
                 CLUSTER_CONNECT_AUTO_INCREMENT_START
         });
+        return result;
+    }
+
+    /** Get the byteBufferPoolSizes from properties */
+    int[] getByteBufferPoolSizes(Map<?, ?> props) {
+        int[] result;
+        String byteBufferPoolSizesProperty = getStringProperty(props, PROPERTY_CLUSTER_BYTE_BUFFER_POOL_SIZES,
+                DEFAULT_PROPERTY_CLUSTER_BYTE_BUFFER_POOL_SIZES);
+        // separators are any combination of white space, commas, and semicolons
+        String[] byteBufferPoolSizesList = byteBufferPoolSizesProperty.split("[,; \t\n\r]+", 48);
+        int count = byteBufferPoolSizesList.length;
+        result = new int[count];
+        for (int i = 0; i < count; ++i) {
+            try {
+                result[i] = Integer.parseInt(byteBufferPoolSizesList[i]);
+            } catch (NumberFormatException ex) {
+                throw new ClusterJFatalUserException(local.message(
+                        "ERR_Byte_Buffer_Pool_Sizes_Format", byteBufferPoolSizesProperty), ex);
+            }
+        }
         return result;
     }
 
@@ -549,11 +606,14 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
                     if (logger.isDebugEnabled())logger.debug("Removing dictionary entry for table " + tableName
                             + " for class " + cls.getName());
                     dictionary.removeCachedTable(tableName);
+                    for (ClusterConnection clusterConnection: pooledConnections) {
+                        clusterConnection.unloadSchema(tableName);
+                    }
                 }
             }
-            for (ClusterConnection clusterConnection: pooledConnections) {
-                clusterConnection.unloadSchema(tableName);
-            }
+//            for (ClusterConnection clusterConnection: pooledConnections) {
+//                clusterConnection.unloadSchema(tableName);
+//            }
             return tableName;
         }
     } 

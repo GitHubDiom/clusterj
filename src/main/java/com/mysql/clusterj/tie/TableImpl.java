@@ -52,6 +52,12 @@ class TableImpl implements Table {
     /** The table name */
     private String tableName;
 
+    /** The projection key */
+    protected String key;
+
+    /** The projected column names */
+    protected String[] projectedColumnNames;
+
     /** The column names */
     private String[] columnNames;
 
@@ -134,6 +140,8 @@ class TableImpl implements Table {
             }
         }
         bufferSize = offset;
+        projectedColumnNames = columnNames;
+        key = tableName;
         this.primaryKeyColumnNames = 
             primaryKeyColumnNameList.toArray(new String[primaryKeyColumnNameList.size()]);
         this.partitionKeyColumnNames = 
@@ -150,6 +158,10 @@ class TableImpl implements Table {
 
     public String getName() {
         return tableName;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String[] getPrimaryKeyColumnNames() {
@@ -172,6 +184,33 @@ class TableImpl implements Table {
 
     public String[] getColumnNames() {
         return columnNames;
+    }
+
+    public String[] getProjectedColumnNames() {
+        return projectedColumnNames;
+    }
+
+    /** DomainTypeHandler has determined that this is a projection. Set the
+     * projectedColumnNames and create a key for the TableImpl that includes
+     * a projection indicator for each column in the projection.
+     * For example, a table "test" with six columns in which the first column
+     * and the last are projected, the key would be test100001.
+     */
+    public void setProjectedColumnNames(String[] names) {
+        projectedColumnNames = names;
+        StringBuffer buffer = new StringBuffer(tableName);
+        char found = 'x';
+        for (int i = 0; i < columnNames.length; ++i) {
+            found = '0';
+            for (int j = 0; j < projectedColumnNames.length; ++j) {
+                if (columnNames[i].equals(projectedColumnNames[j])) {
+                    found = '1';
+                    break;
+                }
+            }
+            buffer.append(found);
+        }
+        key = buffer.toString();
     }
 
     public int getMaximumColumnId() {

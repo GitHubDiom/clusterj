@@ -49,7 +49,7 @@ public abstract class DynamicObject {
         return delegate.found();
     }
 
-    protected void finalize() throws Throwable {
+    /*protected void finalize() throws Throwable {
         try {
             if (delegate != null) {
                 delegate.release();
@@ -57,5 +57,5 @@ public abstract class DynamicObject {
         } finally {
             super.finalize();
         }
-    }
+    }*/
 }

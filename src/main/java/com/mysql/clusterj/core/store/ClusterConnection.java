@@ -42,4 +42,6 @@ public interface ClusterConnection {
 
     public void initializeAutoIncrement(long[] autoIncrement);
 
+    public void setByteBufferPoolSizes(int[] poolSizes);
+
 }

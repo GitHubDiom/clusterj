@@ -48,7 +48,6 @@ public class ClusterJHelper {
      *
      * @param props properties of the session factory
      * @return the session factory
-     * @throws ClusterFatalUserException if the connection to the cluster cannot be made
      */
     public static SessionFactory getSessionFactory(Map props) {
         return getSessionFactory(props, Thread.currentThread().getContextClassLoader());
@@ -61,7 +60,6 @@ public class ClusterJHelper {
      * @param props the properties for the factory
      * @param loader the class loader for the factory implementation
      * @return the session factory
-     * @throws ClusterFatalUserException if the connection to the cluster cannot be made
      */
     public static SessionFactory getSessionFactory(Map props, ClassLoader loader) {
         SessionFactoryService service =
@@ -78,6 +76,41 @@ public class ClusterJHelper {
      */
     public static <T> T getServiceInstance(Class<T> cls) {
         return getServiceInstance(cls, Thread.currentThread().getContextClassLoader());
+    }
+
+    /** Locate a service implementation for a service.
+     * If the implementation name is not null, use it instead of
+     * looking up. If the implementation class is not loadable or does not
+     * implement the interface, throw an exception.
+     * @param cls
+     * @param implementationClassName name of implementation class to load
+     * @param loader the ClassLoader to use to find the service
+     * @return the implementation instance for a service
+     */
+    @SuppressWarnings("unchecked") // (Class<T>)clazz
+    public static <T> T getServiceInstance(Class<T> cls, String implementationClassName, ClassLoader loader) {
+        if (implementationClassName == null) {
+            return getServiceInstance(cls, loader);
+        } else {
+            try {
+                Class<?> clazz = Class.forName(implementationClassName, true, loader);
+                Class<T> serviceClass = null;
+                if (!(cls.isAssignableFrom(clazz))) {
+                    throw new ClassCastException(cls.getName() + " " + implementationClassName);
+                }
+                serviceClass = (Class<T>)clazz;
+                T service = serviceClass.newInstance();
+                return service;
+            } catch (ClassNotFoundException e) {
+                throw new ClusterJFatalUserException(implementationClassName, e);
+            } catch (ClassCastException e) {
+                throw new ClusterJFatalUserException(implementationClassName, e);
+            } catch (InstantiationException e) {
+                throw new ClusterJFatalUserException(implementationClassName, e);
+            } catch (IllegalAccessException e) {
+                throw new ClusterJFatalUserException(implementationClassName, e);
+            }
+        }
     }
 
     /** Locate all service implementations by services lookup of

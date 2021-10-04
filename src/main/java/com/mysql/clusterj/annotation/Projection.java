@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2010, 2015, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,23 +13,22 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-*/
+ */
 
-package com.mysql.clusterj;
+package com.mysql.clusterj.annotation;
 
-public interface DynamicObjectDelegate {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    public Object get(int columnNumber);
-
-    public void set(int columnNumber, Object value);
-
-    public ColumnMetadata[] columnMetadata();
-
-    public Boolean found();
-
-    public void found(Boolean found);
-
-    public void release();
-
-    public boolean wasReleased();
+/**
+ * Annotation on a type to define it as a projection of a table.
+ * Only the columns mapped to persistent fields/methods will be used
+ * when performing operations on the table.
+ */
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Projection
+{
 }

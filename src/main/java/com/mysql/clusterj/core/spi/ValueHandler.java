@@ -93,5 +93,5 @@ public interface ValueHandler extends DynamicObjectDelegate, InvocationHandler {
     void setCacheManager(CacheManager cm);
     void setProxy(Object proxy);
     Object getProxy();
-
+    void release();
 }

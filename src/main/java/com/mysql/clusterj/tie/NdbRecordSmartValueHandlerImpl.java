@@ -76,27 +76,43 @@ public class NdbRecordSmartValueHandlerImpl implements SmartValueHandler {
     /** Finalize this object. This method is called by the garbage collector
      * when the proxy that delegates to this object is no longer reachable.
      */
-    protected void finalize() throws Throwable {
-        if (logger.isDetailEnabled()) logger.detail("NdbRecordSmartValueHandler.finalize");
-        try {
-            release();
-        } finally {
-            super.finalize();
-        }
-    }
+//    protected void finalize() throws Throwable {
+//        if (logger.isDetailEnabled()) logger.detail("NdbRecordSmartValueHandler.finalize");
+//        try {
+//            release();
+//        } finally {
+//            super.finalize();
+//        }
+//    }
 
     /** Release any resources associated with this object.
      * This method is called by the owner of this object.
      */
     public void release() {
         if (logger.isDetailEnabled()) logger.detail("NdbRecordSmartValueHandler.release");
+        if (wasReleased()) {
+            return;
+        }
         // NdbRecordOperationImpl holds references to key buffer and value buffer ByteBuffers
         operation.release();
+        operation = null;
         domainTypeHandler = null;
         domainFieldHandlers = null;
         fieldNumberToColumnNumberMap = null;
         transientValues = null;
         proxy = null;
+    }
+
+    /** Was this value handler released? */
+    public boolean wasReleased() {
+        return operation == null;
+    }
+
+    /** Assert that this value handler was not released */
+    void assertNotReleased() {
+        if (wasReleased()) {
+            throw new ClusterJUserException(local.message("ERR_Cannot_Access_Object_After_Release"));
+        }
     }
 
     protected NdbRecordOperationImpl operation;

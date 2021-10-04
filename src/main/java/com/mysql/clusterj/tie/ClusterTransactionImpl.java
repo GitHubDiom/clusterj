@@ -131,6 +131,10 @@ class ClusterTransactionImpl implements ClusterTransaction {
         this.bufferManager = db.getBufferManager();
     }
 
+    public ClusterConnectionImpl getClusterConnection() {
+        return this.clusterConnectionImpl;
+    }
+
     public void close() {
         if (ndbTransaction != null) {
             ndbTransaction.close();
@@ -460,12 +464,8 @@ class ClusterTransactionImpl implements ClusterTransaction {
         return operation;
     }
 
-    /** Create a scan operation on the index using NdbRecord. 
-     * 
-     * @param ndbRecord the ndb record
-     * @param mask the mask that specifies which columns to read
-     * @param object scan options // TODO change this
-     * @return
+    /**
+     * Create a scan operation on the index using NdbRecord.
      */
     public NdbIndexScanOperation scanIndex(NdbRecordConst key_record, NdbRecordConst result_record,
             byte[] result_mask, ScanOptions scanOptions) {

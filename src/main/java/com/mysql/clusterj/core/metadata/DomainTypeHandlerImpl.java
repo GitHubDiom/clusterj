@@ -29,6 +29,7 @@ import com.mysql.clusterj.ColumnMetadata;
 import com.mysql.clusterj.DynamicObjectDelegate;
 
 import com.mysql.clusterj.annotation.PersistenceCapable;
+import com.mysql.clusterj.annotation.Projection;
 
 import com.mysql.clusterj.core.CacheManager;
 
@@ -55,6 +56,8 @@ import java.util.Map;
  * Persistent properties consist of a pair of bean-pattern methods for which the
  * get method returns the same type as the parameter of the 
  * similarly-named set method.
+ *
+ * param T: the class of the persistence-capable type
  */
 public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
 
@@ -130,7 +133,12 @@ public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
                         "ERR_No_Persistence_Capable_Annotation", name));
             }
             this.tableName = persistenceCapable.table();
+            if (tableName.length() == 0) {
+                throw new ClusterJUserException(local.message(
+                        "ERR_No_TableAnnotation", name));
+            }
         }
+        List<String> columnNamesUsed = new ArrayList<String>();
         this.table = getTable(dictionary);
         if (table == null) {
             throw new ClusterJUserException(local.message("ERR_Get_NdbTable", name, tableName));
@@ -304,6 +312,7 @@ public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
                 if (columnNames[columnNumber].equals(columnName)) {
                     fieldNumberToColumnNumberMap[fieldNumber] = columnNumber;
                     found = true;
+                    columnNamesUsed.add(columnNames[columnNumber]);
                     break;
                 }
             }
@@ -312,6 +321,12 @@ public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
                 fieldNumberToColumnNumberMap[fieldNumber] = --transientFieldNumber;
                 transientFieldHandlerList.add((DomainFieldHandlerImpl) fieldHandler);
             }
+        }
+        // if projection, get list of projected fields and give them to the Table instance
+        if (cls.getAnnotation(Projection.class) != null) {
+            String[] projectedColumnNames = new String[columnNamesUsed.size()];
+            columnNamesUsed.toArray(projectedColumnNames);
+            table.setProjectedColumnNames(projectedColumnNames);
         }
         numberOfTransientFields = 0 - transientFieldNumber;
         transientFieldHandlers = 
@@ -369,7 +384,7 @@ public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
         return true;
     }
 
-    public ValueHandler getValueHandler(Object instance)
+    /*public ValueHandler getValueHandler(Object instance)
             throws IllegalArgumentException {
         if (instance instanceof ValueHandler) {
             return (ValueHandler)instance;
@@ -380,6 +395,24 @@ public class DomainTypeHandlerImpl<T> extends AbstractDomainTypeHandlerImpl<T> {
                     Proxy.getInvocationHandler(instance);
             return handler;
         }
+    }*/
+
+    public ValueHandler getValueHandler(Object instance)
+            throws IllegalArgumentException {
+        ValueHandler handler = null;
+        if (instance instanceof ValueHandler) {
+            handler = (ValueHandler)instance;
+        } else if (instance instanceof DynamicObject) {
+            DynamicObject dynamicObject = (DynamicObject)instance;
+            handler = (ValueHandler)dynamicObject.delegate();
+        } else {
+            handler = (ValueHandler)Proxy.getInvocationHandler(instance);
+        }
+        // make sure the value handler has not been released
+        if (handler.wasReleased()) {
+            throw new ClusterJUserException(local.message("ERR_Cannot_Access_Object_After_Release"));
+        }
+        return handler;
     }
 
     public void objectMarkModified(ValueHandler handler, String fieldName) {
