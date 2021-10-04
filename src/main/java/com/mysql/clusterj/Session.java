@@ -366,4 +366,15 @@ public interface Session {
      * @return List of NDB Event names.
      */
     public List<String> getEventNames();
+
+    /** Release resources associated with an instance. The instance must be a domain object obtained via
+     * session.newInstance(T.class), find(T.class), or query; or Iterable<T>, or array T[].
+     * Resources released can include direct buffers used to hold instance data.
+     * Released resources may be returned to a pool.
+     * @param obj a domain object of type T, an Iterable<T>, or array T[]
+     * @return the input parameter
+     * @throws ClusterJUserException if the instance is not a domain object T, Iterable<T>, or array T[],
+     * or if the object is used after calling this method.
+     */
+    <T> T release(T obj);
 }

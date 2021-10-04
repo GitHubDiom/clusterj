@@ -41,6 +41,8 @@ import com.mysql.clusterj.query.QueryDomainType;
 import com.mysql.clusterj.tie.EventImpl;
 import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -1612,5 +1614,55 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
 
     public EventOperation nextEvent() {
         return db.nextEvent();
+    }
+
+    /** Release resources associated with an instance. The instance must be a domain object obtained via
+     * session.newInstance(T.class), find(T.class), or query; or Iterable<T>, or array T[].
+     * Resources released can include direct buffers used to hold instance data.
+     * Released resourced may be returned to a pool.
+     * @throws ClusterJUserException if the instance is not a domain object T, Iterable<T>, or array T[],
+     * or if the object is used after calling this method.
+     */
+    public <T> T release(T param) {
+        if (param == null) {
+            throw new ClusterJUserException(local.message("ERR_Release_Parameter"));
+        }
+        // is the parameter an Iterable?
+        if (Iterable.class.isAssignableFrom(param.getClass())) {
+            Iterable<?> instances = (Iterable<?>)param;
+            for (Object instance:instances) {
+                release(instance);
+            }
+        } else
+            // is the parameter an array?
+            if (param.getClass().isArray()) {
+                Object[] instances = (Object[])param;
+                for (Object instance:instances) {
+                    release(instance);
+                }
+            } else {
+                assertNotClosed();
+                // is the parameter a Dynamic Object?
+                if (DynamicObject.class.isAssignableFrom(param.getClass())) {
+                    DynamicObject dynamicObject = (DynamicObject)param;
+                    DynamicObjectDelegate delegate = dynamicObject.delegate();
+                    if (delegate != null) {
+                        delegate.release();
+                    }
+                    // it must be a Proxy with a clusterj InvocationHandler
+                } else {
+                    try {
+                        InvocationHandler handler = Proxy.getInvocationHandler(param);
+                        if (!ValueHandler.class.isAssignableFrom(handler.getClass())) {
+                            throw new ClusterJUserException(local.message("ERR_Release_Parameter"));
+                        }
+                        ValueHandler valueHandler = (ValueHandler)handler;
+                        valueHandler.release();
+                    } catch (Throwable t) {
+                        throw new ClusterJUserException(local.message("ERR_Release_Parameter"), t);
+                    }
+                }
+            }
+        return param;
     }
 }
