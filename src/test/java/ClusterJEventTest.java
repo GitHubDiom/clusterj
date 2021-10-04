@@ -30,7 +30,7 @@ public class ClusterJEventTest {
         );
 
         Option tableNameOption = new Option(
-                "n", "table_name", true,
+                "t", "table_name", true,
                 "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME
         );
 
@@ -40,7 +40,7 @@ public class ClusterJEventTest {
         );
 
         Option timeoutOption = new Option(
-                "t", "event_limit", true,
+                "l", "event_limit", true,
                 "Number of events to listen for before stopping. Default: " + DEFAULT_EVENT_LIMIT
         );
 
@@ -62,6 +62,12 @@ public class ClusterJEventTest {
                         "then this will simply try to use the existing event if it discovers it."
         );
 
+        Option eventColumnSet = new Option(
+                "n", "event_col_name_set", true,
+                "Selects the array of event column names to use. 0 for c0, c1, c2, c3, c4. 1 for m0, m1, " +
+                        "m2, m3, m4"
+        );
+
         options.addOption(connectStringOption);
         options.addOption(databaseOption);
         options.addOption(tableNameOption);
@@ -70,6 +76,7 @@ public class ClusterJEventTest {
         options.addOption(forceOption);
         options.addOption(debugStringOption);
         options.addOption(deleteIfExistsOption);
+        options.addOption(eventColumnSet);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -91,6 +98,7 @@ public class ClusterJEventTest {
         String debugString = DEFAULT_DEBUG_STRING;
         int eventLimit = DEFAULT_EVENT_LIMIT;
         int force = 0;
+        int eventColumnNameSet = 0;
 
         if (cmd.hasOption("connect_string"))
             connectString = cmd.getOptionValue("connect_string");
@@ -117,9 +125,8 @@ public class ClusterJEventTest {
         if (cmd.hasOption("delete_if_exists"))
             deleteIfExists = true;
 
-        if (cmd.hasOption("suppressClusterJDebugOption")) {
-
-        }
+        if (cmd.hasOption("event_limit"))
+            eventColumnNameSet = Integer.parseInt(cmd.getOptionValue("event_col_name_set"));
 
         Dbug dbug = ClusterJHelper.newDbug();
 
@@ -147,13 +154,30 @@ public class ClusterJEventTest {
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
 
-        String[] eventColumnNames = new String[] {
+        String[] eventColumnNames;
+
+        String[] eventColumnNames1 = new String[] {
                 "c0",
                 "c1",
                 "c2",
                 "c3",
                 "c4"
         };
+
+        String[] eventColumnNames2 = new String[] {
+                "m0",
+                "m1",
+                "m2",
+                "m3",
+                "m4"
+        };
+
+        if (eventColumnNameSet == 0)
+            eventColumnNames = eventColumnNames1;
+        else if (eventColumnNameSet == 1)
+            eventColumnNames = eventColumnNames2;
+        else
+            throw new IllegalArgumentException("Invalid EventColumnName set specified: " + eventColumnNameSet);
 
         System.out.println("Checking to see if event with name " + eventName + " already exists...");
         Event event = session.getEvent(eventName);
