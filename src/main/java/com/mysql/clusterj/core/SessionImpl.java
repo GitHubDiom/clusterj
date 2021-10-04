@@ -1604,7 +1604,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
         return db.createEventOperation(eventName);
     }
 
-    public boolean dropEventOperation(NdbEventOperation eventOp) {
+    public boolean dropEventOperation(EventOperation eventOp) {
         return db.dropEventOperation(eventOp);
     }
 

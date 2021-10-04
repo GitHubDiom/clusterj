@@ -532,8 +532,9 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
         return new NdbEventOperationImpl(ndbEventOperation, this, false);
     }
 
-    public boolean dropEventOperation(NdbEventOperation eventOp) {
-        int returnCode = ndb.dropEventOperation(eventOp);
+    public boolean dropEventOperation(EventOperation eventOp) {
+        NdbEventOperationImpl eventOpImpl = (NdbEventOperationImpl)eventOp;
+        int returnCode = ndb.dropEventOperation(eventOpImpl.getNdbEventOperation());
 
         if (returnCode > 0) {
             logger.error("Failed to drop event operation.");

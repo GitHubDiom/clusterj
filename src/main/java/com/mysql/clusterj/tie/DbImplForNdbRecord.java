@@ -133,7 +133,7 @@ class DbImplForNdbRecord implements com.mysql.clusterj.core.store.Db {
         throw new UnsupportedOperationException("Not implemented!");
     }
 
-    public boolean dropEventOperation(NdbEventOperation eventOp) {
+    public boolean dropEventOperation(EventOperation eventOp) {
         throw new UnsupportedOperationException("Not implemented!");
     }
 

@@ -293,7 +293,7 @@ public interface Session {
      *
      * @return 0 on success
      */
-    public boolean dropEventOperation(NdbEventOperation eventOp);
+    public boolean dropEventOperation(EventOperation eventOp);
 
     /**
      * Wait for an event to occur. Will return as soon as an event
