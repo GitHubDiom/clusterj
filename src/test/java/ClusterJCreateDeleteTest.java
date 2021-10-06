@@ -163,7 +163,7 @@ public class ClusterJCreateDeleteTest {
             };
 
             session.createAndRegisterEvent(
-                    eventName, tableName, eventColumnNames, new TableEvent[] {TableEvent.ALL},0);
+                    eventName, tableName, eventColumnNames, new TableEvent[] {TableEvent.ALL},0, true);
         }
         else if (operation.equals("list") || operation.equals("l")) {
             List<String> eventNames = session.getEventNames();

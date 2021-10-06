@@ -202,7 +202,8 @@ public class ClusterJEventTest {
                     tableName,
                     eventColumnNames,
                     new TableEvent[] { TableEvent.ALL },
-                    force);
+                    force,
+                    true);
         } else {
             System.out.println("Will re-use existing event " + eventName + ".");
         }

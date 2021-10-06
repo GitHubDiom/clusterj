@@ -27,9 +27,11 @@ com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$TransporterWarning.class
 com\mysql\clusterj\tie\ClusterTransactionImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$RestoreStarted.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$RecordSpecificationConst.class
+com\mysql\clusterj\tie\Utility$2.class
 com\mysql\clusterj\tie\PartitionKeyImpl$1.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$14.class
 com\mysql\ndbjtie\ndbapi\NdbIndexScanOperation.class
+com\mysql\clusterj\annotation\PartitionKey.class
 com\mysql\ndbjtie\ndbapi\NdbScanFilterConst.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$2.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$RecordSpecificationArray.class
@@ -81,6 +83,8 @@ com\mysql\clusterj\tie\NdbRecordImpl$5.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$33.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$CommunicationClosed.class
 com\mysql\clusterj\annotation\Column.class
+com\mysql\clusterj\core\query\GreaterThanPredicateImpl.class
+com\mysql\clusterj\tie\NdbRecordSmartValueHandlerFactoryImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$GlobalCheckpointCompleted.class
 com\mysql\clusterj\EventReport.class
 com\mysql\ndbjtie\ndbapi\Ndb$PartitionSpecConst.class
@@ -107,10 +111,14 @@ com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$8$2.class
 com\mysql\ndbjtie\mgmapi\MGMAPI$ndb_mgm_reply.class
 com\mysql\clusterj\core\query\CandidateIndexImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$ObjectOperationHandlerShort.class
+com\mysql\clusterj\core\util\JDK14LoggerImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$ArbitState.class
+com\mysql\clusterj\core\SessionImpl.class
 com\mysql\clusterj\tie\NdbRecordImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$ObjectOperationHandlerLong.class
+com\mysql\clusterj\core\metadata\KeyValueHandlerImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$STTORRYRecieved.class
+com\mysql\clusterj\tie\IndexOperationImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$35.class
 com\mysql\clusterj\core\query\PredicateImpl$1.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$11.class
@@ -119,7 +127,9 @@ com\mysql\ndbjtie\mgmapi\MGMAPI$ndb_mgm_node_state.class
 com\mysql\ndbjtie\ndbapi\NdbRecAttr.class
 com\mysql\clusterj\core\metadata\DomainFieldHandlerImpl$4.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$4.class
+com\mysql\clusterj\core\SessionImpl$TransactionState.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$GCP_TakeoverCompleted.class
+com\mysql\clusterj\tie\Utility$MultiByteCharsetConverter.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$GlobalCheckpointStarted.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$9$2.class
 com\mysql\clusterj\query\QueryDefinition.class
@@ -146,6 +156,7 @@ com\mysql\ndbjtie\ndbapi\Ndb_cluster_connectionConst.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$6.class
 com\mysql\clusterj\tie\NdbRecordImpl$3.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$SingleUser.class
+com\mysql\clusterj\core\util\JDK14LoggerFactoryImpl$Log4jWrappedLogger.class
 com\mysql\clusterj\core\query\PredicateImpl$ScanType.class
 com\mysql\clusterj\tie\ScanFilterImpl.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Object$Type.class
@@ -153,6 +164,7 @@ com\mysql\clusterj\tie\DictionaryImpl.class
 com\mysql\clusterj\annotation\Extension.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$OptimizeTableHandle.class
 com\mysql\clusterj\core\query\QueryDomainTypeImpl.class
+com\mysql\clusterj\core\TransactionImpl.class
 com\mysql\clusterj\core\query\CandidateIndexImpl$CandidateColumnImpl.class
 com\mysql\jtie\Wrapper.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NR_CopyFragsStarted.class
@@ -174,6 +186,7 @@ com\mysql\ndbjtie\ndbapi\NdbError.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$ObjectOperationHandlerInteger.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$SendBytesStatistic.class
 com\mysql\ndbjtie\ndbapi\Ndb.class
+com\mysql\clusterj\core\query\QueryImpl.class
 com\mysql\ndbjtie\mgmapi\MGMAPI.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$39.class
 com\mysql\clusterj\tie\NdbRecordResultDataImpl.class
@@ -188,6 +201,7 @@ com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$BackupAborted.class
 com\mysql\clusterj\tie\NdbRecordInsertOperationImpl.class
 com\mysql\ndbjtie\ndbapi\NDBAPI.class
 com\mysql\clusterj\core\store\Operation.class
+com\mysql\clusterj\tie\Utility$3.class
 com\mysql\clusterj\query\Predicate.class
 com\mysql\clusterj\core\query\LikePredicateImpl.class
 com\mysql\clusterj\tie\NdbRecordBlobImpl.class
@@ -199,6 +213,7 @@ com\mysql\clusterj\core\store\Db.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NDBStopStarted.class
 com\mysql\ndbjtie\mgmapi\MGMAPI_CONFIG_PARAMTERS.class
 com\mysql\clusterj\tie\NdbRecordIndexScanOperationImpl$2.class
+com\mysql\clusterj\tie\NdbRecordUniqueKeyOperationImpl.class
 com\mysql\ndbjtie\ndbapi\Ndb$PartitionSpec.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Event.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$AutoGrowSpecification.class
@@ -206,10 +221,14 @@ com\mysql\ndbjtie\ndbapi\NdbIndexScanOperation$BoundType.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$LogfileGroup.class
 com\mysql\ndbjtie\ndbapi\NdbOperation$OperationOptionsConst$Flags.class
 com\mysql\ndbjtie\ndbapi\NdbErrorConst$Status.class
+com\mysql\clusterj\ClusterJFatalUserException.class
 com\mysql\ndbjtie\ndbapi\NdbOperation$SetValueSpecArray.class
+com\mysql\clusterj\tie\Utility$CharsetConverter.class
 com\mysql\clusterj\core\query\QueryDomainTypeImpl$2.class
+com\mysql\clusterj\annotation\Indices.class
 com\mysql\clusterj\tie\NdbRecordSmartValueHandlerImpl$1.class
 com\mysql\ndbjtie\mysql\CharsetMapConst.class
+com\mysql\clusterj\tie\Utility$1.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$ColumnConst.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$DictionaryConst$ListConst$ElementArray.class
 com\mysql\clusterj\tie\NdbRecordIndexScanOperationImpl$1.class
@@ -231,9 +250,11 @@ com\mysql\clusterj\core\query\ParameterImpl.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$DatafileConst.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$CM_REGREF.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NDBStartCompleted.class
+com\mysql\clusterj\annotation\PersistenceModifier.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$42.class
 com\mysql\clusterj\core\spi\DomainTypeHandlerFactory.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Object$Store.class
+com\mysql\clusterj\tie\NdbRecordUniqueKeyOperationImpl$1.class
 com\mysql\clusterj\core\query\QueryBuilderImpl.class
 com\mysql\ndbjtie\ndbapi\NdbOperationConst$LockMode.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$BackupCompleted.class
@@ -248,19 +269,24 @@ com\mysql\clusterj\ClusterJFatalInternalException.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$LCP_TakeoverCompleted.class
 com\mysql\clusterj\annotation\NullValue.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$LocalCheckpointStarted.class
+com\mysql\clusterj\core\query\LessEqualPredicateImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$28.class
 com\mysql\clusterj\tie\NdbRecordImpl$6.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NDBStartStarted.class
 com\mysql\ndbjtie\ndbapi\NdbScanFilter$BinaryCondition.class
 com\mysql\clusterj\core\store\RecordAttr.class
 com\mysql\clusterj\core\StoreManager.class
+com\mysql\clusterj\tie\Utility$EndianManager.class
+com\mysql\clusterj\core\query\LessThanPredicateImpl.class
 com\mysql\ndbjtie\ndbapi\NdbTransactionConst.class
 com\mysql\ndbjtie\ndbapi\NdbIndexScanOperation$NotSpecified.class
+com\mysql\clusterj\core\SessionImpl$4.class
 com\mysql\ndbjtie\ndbapi\NdbScanFilter$Group.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$8.class
 com\mysql\clusterj\tie\NdbRecordImpl$1.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Dictionary.class
 com\mysql\clusterj\core\metadata\DomainFieldHandlerImpl$1.class
+com\mysql\clusterj\core\util\JDK14LoggerFactoryImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NR_CopyFragsCompleted.class
 com\mysql\ndbjtie\ndbapi\Ndb$Key_part_ptrArray.class
 com\mysql\ndbjtie\ndbapi\NdbEventOperation.class
@@ -278,6 +304,7 @@ com\mysql\ndbjtie\ndbapi\NdbDictionary.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$JobStatistic.class
 com\mysql\clusterj\core\query\GreaterEqualPredicateImpl.class
 com\mysql\clusterj\core\StateManager.class
+com\mysql\clusterj\core\query\EqualPredicateImpl.class
 com\mysql\ndbjtie\ndbapi\NdbTransaction$CommitStatusType.class
 com\mysql\ndbjtie\ndbapi\NdbTransaction.class
 com\mysql\clusterj\annotation\Lob.class
@@ -290,6 +317,7 @@ com\mysql\ndbjtie\mgmapi\MGMAPI$ndb_mgm_loglevel.class
 com\mysql\clusterj\core\query\QueryExecutionContextImpl.class
 com\mysql\clusterj\core\store\Blob.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Column.class
+com\mysql\clusterj\core\query\IsNotNullPredicateImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$LCPFragmentCompleted.class
 com\mysql\clusterj\core\metadata\DomainFieldHandlerImpl$3.class
 com\mysql\clusterj\tie\GCHelper.class
@@ -298,6 +326,7 @@ com\mysql\clusterj\core\query\PredicateImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$10.class
 com\mysql\clusterj\tie\ClusterConnectionImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$ObjectOperationHandlerNotPersistent.class
+com\mysql\clusterj\annotation\Columns.class
 com\mysql\ndbjtie\mgmapi\MGMAPI$ndb_mgm_node_status.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$36.class
 com\mysql\ndbjtie\ndbapi\NdbOperation$SetValueSpecConstArray.class
@@ -316,7 +345,9 @@ com\mysql\clusterj\core\store\Index.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$CM_REGCONF.class
 com\mysql\ndbjtie\ndbapi\NdbIndexOperationConst.class
 com\mysql\clusterj\tie\IndexScanOperationImpl$1.class
+com\mysql\clusterj\tie\Utility.class
 com\mysql\clusterj\core\util\I18NHelper.class
+com\mysql\clusterj\core\metadata\InvocationHandlerImpl.class
 com\mysql\clusterj\Dbug.class
 com\mysql\ndbjtie\ndbapi\NdbOperation$OperationOptionsConst.class
 com\mysql\clusterj\tie\NdbRecordScanResultDataImpl.class
@@ -328,6 +359,7 @@ com\mysql\ndbjtie\ndbapi\NDBAPIConst.class
 com\mysql\clusterj\ClusterJUserException.class
 com\mysql\clusterj\Results.class
 com\mysql\clusterj\tie\NdbRecordScanOperationImpl.class
+com\mysql\clusterj\tie\ClusterConnectionServiceImpl.class
 com\mysql\ndbjtie\ndbapi\NdbRecord.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$40.class
 com\mysql\clusterj\tie\NdbRecordImpl$4.class
@@ -340,6 +372,7 @@ com\mysql\clusterj\tie\DbImpl$BufferManager.class
 com\mysql\clusterj\tie\ScanResultDataImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$NDBStopCompleted.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$CreateLogBytes.class
+com\mysql\clusterj\core\SessionImpl$2.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$ColumnConst$StorageType.class
 com\mysql\clusterj\Query$Ordering.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$UNDORecordsExecuted.class
@@ -396,10 +429,12 @@ com\mysql\ndbjtie\ndbapi\NdbEventOperationConst.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$ReceiveBytesStatistic.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$26.class
 com\mysql\ndbjtie\ndbapi\NdbBlob.class
+com\mysql\clusterj\core\SessionImpl$3.class
 com\mysql\ndbjtie\ndbapi\Ndb$Key_part_ptrConst.class
 com\mysql\clusterj\TableEvent$1.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$19.class
+com\mysql\clusterj\tie\Utility$SingleByteCharsetConverter.class
 com\mysql\ndbjtie\ndbapi\NdbRecAttrConst.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$ObjectConst$Status.class
 com\mysql\ndbjtie\ndbapi\NdbIndexScanOperationConst.class
@@ -408,6 +443,8 @@ com\mysql\clusterj\ClusterJFatalException.class
 com\mysql\clusterj\tie\PartitionKeyImpl$5.class
 com\mysql\clusterj\tie\DbugImpl.class
 com\mysql\ndbjtie\mgmapi\NDB_LOGEVENT$ndb_logevent$SentHeartbeat.class
+com\mysql\clusterj\core\SessionImpl$1.class
+com\mysql\clusterj\core\query\BetweenPredicateImpl.class
 com\mysql\clusterj\core\query\ComparativePredicateImpl.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$TableConst.class
 com\mysql\clusterj\query\QueryBuilder.class
@@ -429,6 +466,7 @@ com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$ObjectOperationH
 com\mysql\ndbjtie\ndbapi\NdbOperation$SetValueSpec.class
 com\mysql\ndbjtie\ndbapi\NdbDictionary$Tablespace.class
 com\mysql\clusterj\core\metadata\AbstractDomainFieldHandlerImpl$24.class
+com\mysql\clusterj\annotation\Extensions.class
 com\mysql\clusterj\core\metadata\DomainTypeHandlerImpl$1.class
 com\mysql\clusterj\tie\NdbRecordIndexScanOperationImpl.class
 com\mysql\clusterj\core\store\ClusterConnectionService.class
