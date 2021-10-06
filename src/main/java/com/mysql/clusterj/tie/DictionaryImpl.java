@@ -156,7 +156,10 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
      * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
      *              and we must drop the existing event first.
      */
-    public void createAndRegisterEvent(com.mysql.clusterj.core.store.Event event, int force) {
+    public void createAndRegisterEvent(
+            com.mysql.clusterj.core.store.Event event,
+            int force,
+            boolean recreateIfExists) {
         logger.debug("Attempting to create and register event: " + event.toString());
 
         EventConst ndbEvent = getNdbEventFromClusterJEvent(event);
@@ -179,19 +182,22 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
             if (classification == NdbErrorConst.Classification.SchemaObjectExists) {
                 logger.debug("Event creation failed: event " + event.getName() + " already exists.");
-                dropEvent(event.getName(), force);
 
-                // Re-create it first.
-                ndbEvent = getNdbEventFromClusterJEvent(event);
+                if (recreateIfExists) {
+                    dropEvent(event.getName(), force);
 
-                logger.debug("Trying again to create event " + event.getName() + " on table "
-                        + ndbEvent.getTableName() + ".");
+                    // Re-create it first.
+                    ndbEvent = getNdbEventFromClusterJEvent(event);
 
-                // Try to add it again. Throw an exception if we get another error.
-                returnCode = ndbDictionary.createEvent(ndbEvent);
-                if (returnCode != 0) handleError(returnCode, ndbDictionary, "");
+                    logger.debug("Trying again to create event " + event.getName() + " on table "
+                            + ndbEvent.getTableName() + ".");
 
-                logger.debug("Successfully created event " + event.getName() + ".");
+                    // Try to add it again. Throw an exception if we get another error.
+                    returnCode = ndbDictionary.createEvent(ndbEvent);
+                    if (returnCode != 0) handleError(returnCode, ndbDictionary, "");
+
+                    logger.debug("Successfully created event " + event.getName() + ".");
+                }
             } else {
                 // There was some other error (i.e., it wasn't that the event already exists).
                 handleError(returnCode, ndbDictionary, "");

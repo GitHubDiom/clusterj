@@ -39,7 +39,6 @@ import com.mysql.clusterj.query.QueryBuilder;
 import com.mysql.clusterj.query.QueryDefinition;
 import com.mysql.clusterj.query.QueryDomainType;
 import com.mysql.clusterj.tie.EventImpl;
-import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -143,14 +142,16 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
     public Event createAndRegisterEvent(String eventName,
                                         String tableName,
                                         TableEvent[] tableEvents,
-                                        int force) {
+                                        int force,
+                                        boolean recreateIfExists) {
         Table table = dictionary.getTable(tableName);
 
         if (table == null)
             throw new IllegalArgumentException("Invalid table specified: \"" + tableName
                     + "\". Table does not exist.");
 
-        return createAndRegisterEventImpl(eventName, table, table.getColumnNames(), tableEvents, force);
+        return createAndRegisterEventImpl(
+                eventName, table, table.getColumnNames(), tableEvents, force, recreateIfExists);
     }
 
     /**
@@ -164,17 +165,19 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
      * @return The event object that was created and registered.
      */
     public Event createAndRegisterEvent(String eventName,
-                                       String tableName,
-                                       String[] eventColumns,
-                                       TableEvent[] tableEvents,
-                                       int force) {
+                                        String tableName,
+                                        String[] eventColumns,
+                                        TableEvent[] tableEvents,
+                                        int force,
+                                        boolean recreateIfExists) {
         Table table = dictionary.getTable(tableName);
 
         if (table == null)
             throw new IllegalArgumentException("Invalid table specified: \"" + tableName
                     + "\". Table does not exist.");
 
-        return createAndRegisterEventImpl(eventName, table, eventColumns, tableEvents, force);
+        return createAndRegisterEventImpl(
+                eventName, table, eventColumns, tableEvents, force, recreateIfExists);
     }
 
     /**
@@ -196,7 +199,8 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
             Table table,
             String[] eventColumns,
             TableEvent[] tableEvents,
-            int force) {
+            int force,
+            boolean recreateIfExists) {
         Event event = new EventImpl(
                 eventName,
                 EventDurability.PERMANENT,

@@ -47,6 +47,16 @@ public interface EventOperation {
     public boolean tableFragmentationChanged();
 
     /**
+     * Get the state of the event operation.
+     *      CREATED = 0,
+     *      EXECUTING = 1,
+     *      DROPPED = 2,
+     *      ERROR = 3
+     * @return Integer representing the state.
+     */
+    public int getState();
+
+    /**
      * Check if table range partition list name has changed, for event TE_ALTER
      */
     public boolean tableRangeListChanged();

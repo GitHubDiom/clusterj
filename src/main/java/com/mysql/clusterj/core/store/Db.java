@@ -74,26 +74,6 @@ public interface Db {
      *        will be set to NDB_FAILURE_GCI.
      *
      * @return True if events available, false if no events available.
-     *
-     * This is a backward compatibility wrapper to pollEvents2().
-     * Returns true if a regular data is found,
-     * returns false otherwise.
-     * However it does not maintain the old behaviour when it encounters
-     * exceptional event data on the head of the event queue:
-     * - returns 1 for event data representing inconsistent epoch.
-     *   In this case, the following nextEvent() call will return NULL.
-     *   The inconsistency (isConsistent(Uint64& gci)) should be checked
-     *   after the following (first) nextEvent() call returning NULL.
-     *   Even though the inconsistent event data is removed from the
-     *   event queue by this nextEvent() call, the information about
-     *   inconsistency will be removed only by the following (second)
-     *   nextEvent() call.
-     * - returns 1 for event data representing event buffer overflow epoch,
-     *   which is added to the event queue when event buffer usage
-     *   exceeds eventbuf_max_alloc.
-     *   In this case, following call to nextEvent() will exit the process.
-     * - removes empty epochs from the event queue head until a regular
-     *   event data is found or the whole queue is processed.
      */
     public boolean pollEvents(int aMillisecondNumber, long[] latestGCI);
 

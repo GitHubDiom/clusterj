@@ -35,8 +35,9 @@ public interface Dictionary {
      * @param event The "template" Event object.
      * @param force This is passed to the dropTable() function if the event we're trying to create already exists,
      *              and we must drop the existing event first.
+     * @param recreateIfExists If true, then drop and recreate the event if it already exists.
      */
-    public void createAndRegisterEvent(Event event, int force);
+    public void createAndRegisterEvent(Event event, int force, boolean recreateIfExists);
 
     /**
      * Get an Event already registered with the server.
