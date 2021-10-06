@@ -209,7 +209,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                 eventColumns,
                 tableEvents);
 
-        dictionary.createAndRegisterEvent(event, force);
+        dictionary.createAndRegisterEvent(event, force, recreateIfExists);
 
         return event;
     }
