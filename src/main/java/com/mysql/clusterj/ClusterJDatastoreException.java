@@ -63,6 +63,20 @@ public class ClusterJDatastoreException extends ClusterJException {
         this.classification = classification;
     }
 
+    /** Get the mysql code
+     @since 7.3.15, 7.4.13, 7.5.4
+     */
+    public int getMysqlCode() {
+        return mysqlCode;
+    }
+
+    /** Get the code
+     @since 7.3.15, 7.4.13, 7.5.4
+     */
+    public int getCode() {
+        return code;
+    }
+
     /** Helper class for getClassification().
      * import com.mysql.clusterj.ClusterJDatastoreException.Classification;
      * Classification c = Classification.lookup(datastoreException.getClassification());
