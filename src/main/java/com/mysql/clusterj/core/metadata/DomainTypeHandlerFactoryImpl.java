@@ -47,9 +47,9 @@ public class DomainTypeHandlerFactoryImpl implements DomainTypeHandlerFactory {
                 DomainTypeHandlerFactory.class, 
                 Thread.currentThread().getContextClassLoader(),
                 domainTypeHandlerFactoryErrorMessages);
-        logger.info("Found " + domainTypeHandlerFactories.size() + " DomainTypeHandlerFactories");
+        logger.debug("Found " + domainTypeHandlerFactories.size() + " DomainTypeHandlerFactories");
         for (DomainTypeHandlerFactory factory: domainTypeHandlerFactories) {
-            logger.info(factory.toString());
+            logger.debug(factory.toString());
         }
     }
 
