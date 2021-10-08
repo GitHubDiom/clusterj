@@ -55,6 +55,31 @@
     </dependencies>
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-resources-plugin</artifactId>-->
+<!--                <version>3.2.0</version>-->
+<!--                <configuration>-->
+<!--                    <resources>-->
+<!--                        <resource>-->
+<!--                            <directory>-->
+<!--                                src/main/resources/com/mysql/clusterj/core-->
+<!--                            </directory>-->
+<!--                            <includes>-->
+<!--                                Bundle.properties-->
+<!--                            </includes>-->
+<!--                        </resource>-->
+<!--                        <resource>-->
+<!--                            <directory>-->
+<!--                                src/main/resources/com/mysql/clusterj/tie-->
+<!--                            </directory>-->
+<!--                            <includes>-->
+<!--                                Bundle.properties-->
+<!--                            </includes>-->
+<!--                        </resource>-->
+<!--                    </resources>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
