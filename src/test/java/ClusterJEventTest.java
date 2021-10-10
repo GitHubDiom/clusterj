@@ -38,7 +38,7 @@ public class ClusterJEventTest {
     public static void main(String[] args) {
         eventColumnNames.put("t0", t0Columns);
         eventColumnNames.put("t1", t1Columns);
-        eventColumnNames.put("datanodesColumns", datanodesColumns);
+        eventColumnNames.put("datanodes", datanodesColumns);
 
         Options options = new Options();
 
