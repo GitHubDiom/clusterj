@@ -5,6 +5,7 @@ import com.mysql.clusterj.core.store.RecordAttr;
 import org.apache.commons.cli.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class ClusterJEventTest {
@@ -17,7 +18,28 @@ public class ClusterJEventTest {
 
     private static final int DEFAULT_EVENT_LIMIT = 30;
 
+    private static final String[] t0Columns = new String[] {"c0", "c1", "c2", "c3", "c4" };
+
+    private static final String[] t1Columns = new String[] {"m0", "m1", "m2", "m3", "m4" };
+
+    public static final String[] datanodesColumns = new String[] {
+            "datanode_uuid",
+            "hostname",
+            "ipaddr",
+            "xfer_port",
+            "info_port",
+            "info_secure_port",
+            "ipc_port",
+            "creation_time"
+    };
+
+    private static final HashMap<String, String[]> eventColumnNames = new HashMap<>();
+
     public static void main(String[] args) {
+        eventColumnNames.put("t0", t0Columns);
+        eventColumnNames.put("t1", t1Columns);
+        eventColumnNames.put("datanodesColumns", datanodesColumns);
+
         Options options = new Options();
 
         Option connectStringOption = new Option(
@@ -63,11 +85,11 @@ public class ClusterJEventTest {
                         "then this will simply try to use the existing event if it discovers it."
         );
 
-        Option eventColumnSet = new Option(
-                "n", "event_col_name_set", true,
-                "Selects the array of event column names to use. 0 for c0, c1, c2, c3, c4. 1 for m0, m1, " +
-                        "m2, m3, m4"
-        );
+//        Option eventColumnSet = new Option(
+//                "n", "event_col_name_set", true,
+//                "Selects the array of event column names to use. 0 for c0, c1, c2, c3, c4. 1 for m0, m1, " +
+//                        "m2, m3, m4"
+//        );
 
         options.addOption(connectStringOption);
         options.addOption(databaseOption);
@@ -77,7 +99,7 @@ public class ClusterJEventTest {
         options.addOption(forceOption);
         options.addOption(debugStringOption);
         options.addOption(deleteIfExistsOption);
-        options.addOption(eventColumnSet);
+//        options.addOption(eventColumnSet);
 
         CommandLineParser parser = new GnuParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -99,7 +121,7 @@ public class ClusterJEventTest {
         String debugString = DEFAULT_DEBUG_STRING;
         int eventLimit = DEFAULT_EVENT_LIMIT;
         int force = 0;
-        int eventColumnNameSet = 0;
+//        int eventColumnNameSet = 0;
 
         if (cmd.hasOption("connect_string"))
             connectString = cmd.getOptionValue("connect_string");
@@ -126,8 +148,8 @@ public class ClusterJEventTest {
         if (cmd.hasOption("delete_if_exists"))
             deleteIfExists = true;
 
-        if (cmd.hasOption("event_col_name_set"))
-            eventColumnNameSet = Integer.parseInt(cmd.getOptionValue("event_col_name_set"));
+//        if (cmd.hasOption("event_col_name_set"))
+//            eventColumnNameSet = Integer.parseInt(cmd.getOptionValue("event_col_name_set"));
 
         Dbug dbug = ClusterJHelper.newDbug();
 
@@ -155,32 +177,16 @@ public class ClusterJEventTest {
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
 
-        String[] eventColumnNames;
+        String[] colNames = eventColumnNames.get(tableName);
 
-        String[] eventColumnNames1 = new String[] {
-                "c0",
-                "c1",
-                "c2",
-                "c3",
-                "c4"
-        };
+//        if (eventColumnNameSet == 0)
+//            eventColumnNames = eventColumnNames1;
+//        else if (eventColumnNameSet == 1)
+//            eventColumnNames = eventColumnNames2;
+//        else
+//            throw new IllegalArgumentException("Invalid EventColumnName set specified: " + eventColumnNameSet);
 
-        String[] eventColumnNames2 = new String[] {
-                "m0",
-                "m1",
-                "m2",
-                "m3",
-                "m4"
-        };
-
-        if (eventColumnNameSet == 0)
-            eventColumnNames = eventColumnNames1;
-        else if (eventColumnNameSet == 1)
-            eventColumnNames = eventColumnNames2;
-        else
-            throw new IllegalArgumentException("Invalid EventColumnName set specified: " + eventColumnNameSet);
-
-        System.out.println("Event column names: " + Arrays.toString(eventColumnNames));
+        System.out.println("Event column names: " + Arrays.toString(colNames));
 
         System.out.println("Checking to see if event with name " + eventName + " already exists...");
         Event event = session.getEvent(eventName);
@@ -200,7 +206,7 @@ public class ClusterJEventTest {
             session.createAndRegisterEvent(
                     eventName,
                     tableName,
-                    eventColumnNames,
+                    colNames,
                     new TableEvent[] { TableEvent.ALL },
                     force,
                     true);
@@ -210,13 +216,13 @@ public class ClusterJEventTest {
 
         EventOperation eventOperation = session.createEventOperation(eventName);
 
-        RecordAttr[] postAttrs = new RecordAttr[eventColumnNames.length];
-        RecordAttr[] preAttrs = new RecordAttr[eventColumnNames.length];
+        RecordAttr[] postAttrs = new RecordAttr[colNames.length];
+        RecordAttr[] preAttrs = new RecordAttr[colNames.length];
 
         System.out.println("Creating/retrieving record attributes for the event columns now...");
-        for (int i = 0; i < eventColumnNames.length; i++) {
-            System.out.println("\tCreating/retrieving attributes for column " + (i + 1) + "/" + eventColumnNames.length);
-            String eventColumnName = eventColumnNames[i];
+        for (int i = 0; i < colNames.length; i++) {
+            System.out.println("\tCreating/retrieving attributes for column " + (i + 1) + "/" + colNames.length);
+            String eventColumnName = colNames[i];
             RecordAttr postAttr = eventOperation.getValue(eventColumnName);
 
             System.out.println("\tSuccessfully retrieved post-value record attribute for column " + eventColumnName);
@@ -250,7 +256,7 @@ public class ClusterJEventTest {
 
                 System.out.println("Event #" + eventCounter + ": " + eventType.name());
 
-                for (int i = 0; i < eventColumnNames.length; i++) {
+                for (int i = 0; i < colNames.length; i++) {
                     RecordAttr postAttr = postAttrs[i];
                     RecordAttr preAttr = preAttrs[i];
 
