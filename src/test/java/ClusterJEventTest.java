@@ -144,9 +144,7 @@ public class ClusterJEventTest {
         if (cmd.hasOption("debug_string"))
             debugString = cmd.getOptionValue("debug_string");
 
-        boolean deleteIfExists = false;
-        if (cmd.hasOption("delete_if_exists"))
-            deleteIfExists = true;
+        boolean deleteIfExists = cmd.hasOption("delete_if_exists");
 
 //        if (cmd.hasOption("event_col_name_set"))
 //            eventColumnNameSet = Integer.parseInt(cmd.getOptionValue("event_col_name_set"));

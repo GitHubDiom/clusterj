@@ -144,6 +144,7 @@ public class SessionImpl implements SessionSPI, CacheManager, StoreManager {
                                         TableEvent[] tableEvents,
                                         int force,
                                         boolean recreateIfExists) {
+        logger.debug("Attempting to create and register event \"" + eventName + "\" on table " + tableName + ".");
         Table table = dictionary.getTable(tableName);
 
         if (table == null)
