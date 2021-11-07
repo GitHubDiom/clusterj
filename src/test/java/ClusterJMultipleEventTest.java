@@ -55,12 +55,12 @@ public class ClusterJMultipleEventTest {
 
         Option tableNameOption1 = new Option(
                 "t1", "table_name1", true,
-                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME
+                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME1
         );
 
         Option tableNameOption2 = new Option(
                 "t2", "table_name2", true,
-                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME
+                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME2
         );
 
         Option eventName1Option = new Option(
@@ -262,8 +262,8 @@ public class ClusterJMultipleEventTest {
         EventOperation event1OperationOriginal = session.createEventOperation(eventName1);
         EventOperation event2OperationOriginal = session.createEventOperation(eventName2);
 
-        RecordAttr[] postAttrsEvent1 = new RecordAttr[colNames.length];
-        RecordAttr[] preAttrsEvent1 = new RecordAttr[colNames.length];
+        RecordAttr[] postAttrsEvent1 = new RecordAttr[colNames1.length];
+        RecordAttr[] preAttrsEvent1 = new RecordAttr[colNames1.length];
 
         System.out.println("Creating/retrieving record attributes for the event1 columns now...");
         for (int i = 0; i < colNames1.length; i++) {
@@ -281,8 +281,8 @@ public class ClusterJMultipleEventTest {
             preAttrsEvent1[i] = preAttr;
         }
 
-        RecordAttr[] postAttrsEvent2 = new RecordAttr[colNames.length];
-        RecordAttr[] preAttrsEvent2 = new RecordAttr[colNames.length];
+        RecordAttr[] postAttrsEvent2 = new RecordAttr[colNames2.length];
+        RecordAttr[] preAttrsEvent2 = new RecordAttr[colNames2.length];
 
         System.out.println("Creating/retrieving record attributes for the event2 columns now...");
         for (int i = 0; i < colNames2.length; i++) {
@@ -296,8 +296,8 @@ public class ClusterJMultipleEventTest {
 
             System.out.println("\tSuccessfully retrieved pre-value record attribute for column " + eventColumnName);
 
-            postAttrsEvent1[i] = postAttr;
-            preAttrsEvent1[i] = preAttr;
+            postAttrsEvent2[i] = postAttr;
+            preAttrsEvent2[i] = preAttr;
         }
 
         System.out.println("Executing Event Operation for event " + eventName1 + " now...");
@@ -334,6 +334,9 @@ public class ClusterJMultipleEventTest {
                     colNames = colNames2;
                 else
                     throw new Exception("Unable to determine which event this corresponds to...");
+
+                RecordAttr[] postAttrs = (event1OperationOriginal == nextEventOp) ? postAttrsEvent1 : postAttrsEvent2;
+                RecordAttr[] preAttrs = (event1OperationOriginal == nextEventOp) ? preAttrsEvent1 : preAttrsEvent2;
 
                 for (int i = 0; i < colNames.length; i++) {
                     RecordAttr postAttr = postAttrs[i];
