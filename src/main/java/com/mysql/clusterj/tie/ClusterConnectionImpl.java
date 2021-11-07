@@ -133,7 +133,9 @@ public class ClusterConnectionImpl
                 new FixedByteBufferPoolImpl(PARTITION_KEY_BUFFER_SIZE, "PartitionKeyBufferPool");
         clusterConnection = Ndb_cluster_connection.create(connectString, nodeId);
         try {
-            clusterConnection.set_name(InetAddress.getLocalHost().getHostName()+" Using 7.5.6 Clusterj");
+            String connectionName = InetAddress.getLocalHost().getHostName()+" Using 7.5.6 Clusterj";
+            logger.debug("Setting cluster connection name to \"" + connectionName + "\"");
+            clusterConnection.set_name(connectionName);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

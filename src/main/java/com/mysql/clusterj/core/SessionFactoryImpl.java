@@ -369,7 +369,7 @@ public class SessionFactoryImpl implements SessionFactory, Constants {
         }
         // find the best pooled connection (the connection with the least active sessions)
         // this is not perfect without synchronization since a connection might close sessions
-        // after getting the dbCount but we don't care about perfection here. 
+        // after getting the dbCount, but we don't care about perfection here. 
         ClusterConnection result = null;
         int bestCount = Integer.MAX_VALUE;
         for (ClusterConnection pooledConnection: pooledConnections ) {
