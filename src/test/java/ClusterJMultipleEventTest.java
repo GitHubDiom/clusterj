@@ -199,7 +199,7 @@ public class ClusterJMultipleEventTest {
         Session session = factory.getSession();
 
         String[] colNames1 = eventColumnNames.get(tableName1);
-        String[] colNames2 = eventColumnNames.get(2);
+        String[] colNames2 = eventColumnNames.get(tableName2);
 
 //        if (eventColumnNameSet == 0)
 //            eventColumnNames = eventColumnNames1;
