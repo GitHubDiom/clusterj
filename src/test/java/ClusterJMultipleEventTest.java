@@ -55,12 +55,12 @@ public class ClusterJMultipleEventTest {
 
         Option tableNameOption1 = new Option(
                 "t1", "table_name1", true,
-                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME1
+                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME_EVENT1
         );
 
         Option tableNameOption2 = new Option(
                 "t2", "table_name2", true,
-                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME2
+                "Name of the table on which the Event will be created. Default: " + DEFAULT_TABLE_NAME_EVENT2
         );
 
         Option eventName1Option = new Option(
