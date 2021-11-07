@@ -319,8 +319,8 @@ public class ClusterJMultipleEventTest {
 
             System.out.println("Initial return value of nextEvent(): " + nextEventOp.toString());
 
-            System.out.println("(event1OperationOriginal == nextEventOp): " + (event1OperationOriginal == nextEventOp));
-            System.out.println("(event2OperationOriginal == nextEventOp): " + (event2OperationOriginal == nextEventOp));
+            System.out.println("(event1OperationOriginal == nextEventOp): " + (event1OperationOriginal.underlyingEquals(nextEventOp)));
+            System.out.println("(event2OperationOriginal == nextEventOp): " + (event2OperationOriginal.underlyingEquals(nextEventOp)));
 
             while (nextEventOp != null) {
                 TableEvent eventType = nextEventOp.getEventType();
@@ -335,8 +335,8 @@ public class ClusterJMultipleEventTest {
                 else
                     throw new Exception("Unable to determine which event this corresponds to...");
 
-                RecordAttr[] postAttrs = (event1OperationOriginal == nextEventOp) ? postAttrsEvent1 : postAttrsEvent2;
-                RecordAttr[] preAttrs = (event1OperationOriginal == nextEventOp) ? preAttrsEvent1 : preAttrsEvent2;
+                RecordAttr[] postAttrs = (event1OperationOriginal.underlyingEquals(nextEventOp)) ? postAttrsEvent1 : postAttrsEvent2;
+                RecordAttr[] preAttrs = (event1OperationOriginal.underlyingEquals(nextEventOp)) ? preAttrsEvent1 : preAttrsEvent2;
 
                 for (int i = 0; i < colNames.length; i++) {
                     RecordAttr postAttr = postAttrs[i];

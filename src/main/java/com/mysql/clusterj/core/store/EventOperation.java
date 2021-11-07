@@ -57,6 +57,13 @@ public interface EventOperation {
     public int getState();
 
     /**
+     * Check if the underlying, internal NDBEventOperation objects are the same for
+     * two instances of NdbEventOperationImpl. Equality is checked by reference (i.e., '==').
+     * @return True if the underlying, internal NDBEventOperation objects are the same.
+     */
+    public boolean underlyingEquals(EventOperation other);
+
+    /**
      * Check if table range partition list name has changed, for event TE_ALTER
      */
     public boolean tableRangeListChanged();
