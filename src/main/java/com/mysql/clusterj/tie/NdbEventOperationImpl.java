@@ -185,9 +185,14 @@ public class NdbEventOperationImpl implements EventOperation {
     }
 
     /**
-     * Check if the underlying, internal NDBEventOperation objects are the same for
-     * two instances of NdbEventOperationImpl. Equality is checked by reference (i.e., '==').
-     * @return True if the underlying, internal NDBEventOperation objects are the same.
+     * Check if the underlying, internal NdbEventOperation objects are the same for
+     * two instances of NdbEventOperationImpl. This function checks equality in two ways:
+     *
+     * First, it checks for equality-by-reference (i.e., '=='). If the two underlying, internal
+     * NdbEventOperation instances are not equal when checked this way, then their hashCode() values
+     * are returned. If they are the same, then the two objects are considered to be equal.
+     *
+     * @return True if the underlying, internal NdbEventOperation objects are the same.
      */
     public boolean underlyingEquals(EventOperation other) {
         NdbEventOperationImpl otherEventImpl = (NdbEventOperationImpl)other;
