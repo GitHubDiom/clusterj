@@ -209,7 +209,7 @@ public class NdbEventOperationImpl implements EventOperation {
        return ndbEventOperation.getState();
     }
 
-    protected NdbEventOperation getNdbEventOperation() {
+    public NdbEventOperation getNdbEventOperation() {
         return this.ndbEventOperation;
     }
 }
