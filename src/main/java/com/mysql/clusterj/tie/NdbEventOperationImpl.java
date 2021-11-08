@@ -190,10 +190,11 @@ public class NdbEventOperationImpl implements EventOperation {
      * @return True if the underlying, internal NDBEventOperation objects are the same.
      */
     public boolean underlyingEquals(EventOperation other) {
-        if (!(other instanceof NdbEventOperationImpl))
-            return false;
-
         NdbEventOperationImpl otherEventImpl = (NdbEventOperationImpl)other;
+
+        System.out.println("this.ndbEventOperation: " + this.ndbEventOperation);
+        System.out.println("otherEventImpl.ndbEventOperation: " + otherEventImpl.ndbEventOperation);
+
         return this.ndbEventOperation == otherEventImpl.ndbEventOperation;
     }
 
