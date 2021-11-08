@@ -318,21 +318,21 @@ public class ClusterJMultipleEventTest {
 
             EventOperation nextEventOp = session.nextEvent();
 
-            System.out.println("Initial return value of nextEvent(): " + nextEventOp.toString());
+//            System.out.println("Initial return value of nextEvent(): " + nextEventOp.toString());
+//
+//            System.out.println("event1OperationOriginal: " + event1OperationOriginal);
+//            System.out.println("event2OperationOriginal: " + event2OperationOriginal);
+//            System.out.println("nextEventOp: " + nextEventOp);
+//
+//            System.out.println("((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation(): " +
+//                    ((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation());
+//            System.out.println("((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation(): " +
+//                    ((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation());
+//            System.out.println("((NdbEventOperationImpl)nextEventOp).getNdbEventOperation(): " +
+//                    ((NdbEventOperationImpl)nextEventOp).getNdbEventOperation());
 
-            System.out.println("event1OperationOriginal: " + event1OperationOriginal);
-            System.out.println("event2OperationOriginal: " + event2OperationOriginal);
-            System.out.println("nextEventOp: " + nextEventOp);
-
-            System.out.println("((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation(): " +
-                    ((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation());
-            System.out.println("((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation(): " +
-                    ((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation());
-            System.out.println("((NdbEventOperationImpl)nextEventOp).getNdbEventOperation(): " +
-                    ((NdbEventOperationImpl)nextEventOp).getNdbEventOperation());
-
-            System.out.println("(event1OperationOriginal == nextEventOp): " + (event1OperationOriginal.underlyingEquals(nextEventOp)));
-            System.out.println("(event2OperationOriginal == nextEventOp): " + (event2OperationOriginal.underlyingEquals(nextEventOp)));
+//            System.out.println("(event1OperationOriginal == nextEventOp): " + (event1OperationOriginal.underlyingEquals(nextEventOp)));
+//            System.out.println("(event2OperationOriginal == nextEventOp): " + (event2OperationOriginal.underlyingEquals(nextEventOp)));
 
             while (nextEventOp != null) {
                 TableEvent eventType = nextEventOp.getEventType();
