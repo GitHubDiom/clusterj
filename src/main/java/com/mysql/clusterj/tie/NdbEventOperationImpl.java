@@ -219,6 +219,14 @@ public class NdbEventOperationImpl implements EventOperation {
     }
 
     /**
+     * Return the hash code of the underlying, internal NdbEventOperation instance.
+     */
+    @Override
+    public int hashCode() {
+        return this.ndbEventOperation.hashCode();
+    }
+
+    /**
      * Get the state of the event operation.
      *      CREATED = 0,
      *      EXECUTING = 1,
