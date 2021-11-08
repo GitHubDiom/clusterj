@@ -204,6 +204,21 @@ public class NdbEventOperationImpl implements EventOperation {
     }
 
     /**
+     * Equality is based on the equality of the underlying, internal NdbEventOperation objects that
+     * are wrapped by the NdbEventOperationImpl objects.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof NdbEventOperationImpl))
+            return false;
+
+        NdbEventOperationImpl otherEventImpl = (NdbEventOperationImpl)other;
+
+        return this.ndbEventOperation == otherEventImpl.ndbEventOperation ||
+                this.ndbEventOperation.hashCode() == otherEventImpl.ndbEventOperation.hashCode();
+    }
+
+    /**
      * Get the state of the event operation.
      *      CREATED = 0,
      *      EXECUTING = 1,

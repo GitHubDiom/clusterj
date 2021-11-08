@@ -324,15 +324,15 @@ public class ClusterJMultipleEventTest {
                 System.out.println("Event #" + eventCounter + ": " + eventType.name());
 
                 String[] colNames;
-                if (event1OperationOriginal.underlyingEquals(nextEventOp))
+                if (event1OperationOriginal.equals(nextEventOp))
                     colNames = colNames1;
-                else if (event2OperationOriginal.underlyingEquals(nextEventOp))
+                else if (event2OperationOriginal.equals(nextEventOp))
                     colNames = colNames2;
                 else
                     throw new Exception("Unable to determine which event this corresponds to...");
 
-                RecordAttr[] postAttrs = (event1OperationOriginal.underlyingEquals(nextEventOp)) ? postAttrsEvent1 : postAttrsEvent2;
-                RecordAttr[] preAttrs = (event1OperationOriginal.underlyingEquals(nextEventOp)) ? preAttrsEvent1 : preAttrsEvent2;
+                RecordAttr[] postAttrs = (event1OperationOriginal.equals(nextEventOp)) ? postAttrsEvent1 : postAttrsEvent2;
+                RecordAttr[] preAttrs = (event1OperationOriginal.equals(nextEventOp)) ? preAttrsEvent1 : preAttrsEvent2;
 
                 for (int i = 0; i < colNames.length; i++) {
                     RecordAttr postAttr = postAttrs[i];
