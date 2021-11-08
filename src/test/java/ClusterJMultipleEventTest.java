@@ -318,31 +318,15 @@ public class ClusterJMultipleEventTest {
 
             EventOperation nextEventOp = session.nextEvent();
 
-//            System.out.println("Initial return value of nextEvent(): " + nextEventOp.toString());
-//
-//            System.out.println("event1OperationOriginal: " + event1OperationOriginal);
-//            System.out.println("event2OperationOriginal: " + event2OperationOriginal);
-//            System.out.println("nextEventOp: " + nextEventOp);
-//
-//            System.out.println("((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation(): " +
-//                    ((NdbEventOperationImpl)event1OperationOriginal).getNdbEventOperation());
-//            System.out.println("((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation(): " +
-//                    ((NdbEventOperationImpl)event2OperationOriginal).getNdbEventOperation());
-//            System.out.println("((NdbEventOperationImpl)nextEventOp).getNdbEventOperation(): " +
-//                    ((NdbEventOperationImpl)nextEventOp).getNdbEventOperation());
-
-//            System.out.println("(event1OperationOriginal == nextEventOp): " + (event1OperationOriginal.underlyingEquals(nextEventOp)));
-//            System.out.println("(event2OperationOriginal == nextEventOp): " + (event2OperationOriginal.underlyingEquals(nextEventOp)));
-
             while (nextEventOp != null) {
                 TableEvent eventType = nextEventOp.getEventType();
 
                 System.out.println("Event #" + eventCounter + ": " + eventType.name());
 
                 String[] colNames;
-                if (event1OperationOriginal == nextEventOp)
+                if (event1OperationOriginal.underlyingEquals(nextEventOp))
                     colNames = colNames1;
-                else if (event2OperationOriginal == nextEventOp)
+                else if (event2OperationOriginal.underlyingEquals(nextEventOp))
                     colNames = colNames2;
                 else
                     throw new Exception("Unable to determine which event this corresponds to...");
