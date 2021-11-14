@@ -207,6 +207,7 @@ class DictionaryImpl implements com.mysql.clusterj.core.store.Dictionary {
 
     /**
      * Create and return an instance of the NDB Event class.
+     *
      * @param event ClusterJ Event to use as template for NDB Event.
      * @return NDB Event based on the given ClusterJ Event.
      */
