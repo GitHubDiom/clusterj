@@ -1,5 +1,6 @@
 package com.mysql.clusterj.core.store;
 
+import com.mysql.clusterj.Session;
 import com.mysql.clusterj.TableEvent;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
@@ -11,6 +12,12 @@ import java.nio.ByteBuffer;
  */
 public interface EventOperation {
     public int isOverrun();
+
+    /**
+     * Set the value of the `canCallNextEvent` instance variable. That variable should only be set to 'true'
+     * after a call to {@link Session#nextEvent()} returns a non-null result.
+     */
+    public void setCanCallNextEvent(boolean canCallNextEvent);
 
     /**
      * In the current implementation a nodefailiure may cause loss of events,

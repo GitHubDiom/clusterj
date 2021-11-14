@@ -1,5 +1,6 @@
 package com.mysql.clusterj.tie;
 
+import com.mysql.clusterj.Session;
 import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.Db;
 import com.mysql.clusterj.core.store.EventOperation;
@@ -32,11 +33,19 @@ public class NdbEventOperationImpl implements EventOperation {
      * Set on creation of this object. Only when this object is created by the API call to nextEvent()
      * (and the result of nextEvent() is non-null) will this be set to true.
      */
-    private final boolean canCallNextEvent;
+    private boolean canCallNextEvent;
 
     protected NdbEventOperationImpl(NdbEventOperation ndbEventOperation, Db db, boolean canCallNextEvent) {
         this.db = (DbImpl)db;
         this.ndbEventOperation = ndbEventOperation;
+        this.canCallNextEvent = canCallNextEvent;
+    }
+
+    /**
+     * Set the value of the `canCallNextEvent` instance variable. That variable should only be set to 'true'
+     * after a call to {@link Session#nextEvent()} returns a non-null result.
+     */
+    public void setCanCallNextEvent(boolean canCallNextEvent) {
         this.canCallNextEvent = canCallNextEvent;
     }
 
@@ -136,6 +145,7 @@ public class NdbEventOperationImpl implements EventOperation {
         return ndbEventOperation.getLatestGCI();
     }
 
+    @Override
     public void execute() {
         logger.debug("Executing event operation now...");
 
