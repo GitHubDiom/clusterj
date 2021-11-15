@@ -149,43 +149,43 @@ public class ClusterJHopsFSAckTableTest {
             while (nextEventOp != null) {
                 TableEvent eventType = nextEventOp.getEventType();
 
-                System.out.println("Event #" + eventCounter + ": " + eventType.name());
+                System.out.println("\n\nEvent #" + eventCounter + ": " + eventType.name());
 
                 RecordAttr[] postAttrs = null;
                 RecordAttr[] preAttrs = null;
                 String[] eventColumns = null;
                 if (eventOperation0.equals(nextEventOp)) {
-                    System.out.println("\nReceived ACK Event for table write_acks_deployment0!");
+                    System.out.println("Received ACK Event for table write_acks_deployment0!");
                     postAttrs = event0PostRecordAttributes;
                     preAttrs = event0PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation1.equals(nextEventOp)) {
-                    System.out.println("\nReceived ACK Event for table write_acks_deployment1!");
+                    System.out.println("Received ACK Event for table write_acks_deployment1!");
                     postAttrs = event1PostRecordAttributes;
                     preAttrs = event1PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation2.equals(nextEventOp)) {
-                    System.out.println("\nReceived ACK Event for table write_acks_deployment2!");
+                    System.out.println("Received ACK Event for table write_acks_deployment2!");
                     postAttrs = event2PostRecordAttributes;
                     preAttrs = event2PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (invEventOperation0.equals(nextEventOp)) {
-                    System.out.println("\nReceived INV Event for table inv_table_watch0!");
+                    System.out.println("Received INV Event for table inv_table_watch0!");
                     postAttrs = event0PostRecordAttributesInv;
                     preAttrs = event0PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation1.equals(nextEventOp)) {
-                    System.out.println("\nReceived INV Event for table inv_table_watch1!");
+                    System.out.println("Received INV Event for table inv_table_watch1!");
                     postAttrs = event2PostRecordAttributesInv;
                     preAttrs = event2PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation2.equals(nextEventOp)) {
-                    System.out.println("\nReceived INV Event for table inv_table_watch2!");
+                    System.out.println("Received INV Event for table inv_table_watch2!");
                     postAttrs = event2PostRecordAttributesInv;
                     preAttrs = event2PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
@@ -198,14 +198,8 @@ public class ClusterJHopsFSAckTableTest {
                     RecordAttr postAttr = postAttrs[i];
                     RecordAttr preAttr = preAttrs[i];
 
-                    // First two columns are integers, second two are strings.
-                    if (i < 2) {
-                        System.out.println("Pre: " + preAttr.u_32_value());
-                        System.out.println("Post: " + postAttr.u_32_value());
-                    } else {
-                        System.out.println("Pre: " + preAttr.toString());
-                        System.out.println("Post: " + postAttr.toString());
-                    }
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_32_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_32_value() + "\n");
                 }
 
                 nextEventOp = session.nextEvent();
