@@ -33,6 +33,18 @@ public class ClusterJHopsFSAckTableTest {
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
 
+        session.createAndRegisterEvent("ack_table_watch0", "write_acks_deployment0",
+                ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 1,
+                true);
+
+        session.createAndRegisterEvent("ack_table_watch1", "write_acks_deployment1",
+                ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 1,
+                true);
+
+        session.createAndRegisterEvent("ack_table_watch2", "write_acks_deployment2",
+                ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 1,
+                true);
+
         EventOperation eventOperation0 = session.createEventOperation("ack_table_watch0");
         EventOperation eventOperation1 = session.createEventOperation("ack_table_watch1");
         EventOperation eventOperation2 = session.createEventOperation("ack_table_watch2");
