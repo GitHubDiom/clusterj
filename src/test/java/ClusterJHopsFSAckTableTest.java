@@ -74,6 +74,10 @@ public class ClusterJHopsFSAckTableTest {
             event2PreRecordAttributes[i] = preAttr2;
         }
 
+        eventOperation0.execute();
+        eventOperation1.execute();
+        eventOperation2.execute();
+
         int eventCounter = 0;
         while (true) {
             boolean foundEvents = session.pollEvents(1000, null);
