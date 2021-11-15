@@ -568,6 +568,11 @@ class DbImpl implements com.mysql.clusterj.core.store.Db {
             return new NdbEventOperationImpl(ndbEventOperation, this, true);
         }
 
+        boolean consistent = ndb.isConsistent(new long[1]);
+
+        if (!consistent)
+            logger.info("ERROR: Inconsistent event data received.");
+
         return null;
     }
 
