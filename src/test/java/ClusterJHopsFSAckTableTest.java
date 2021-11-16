@@ -207,6 +207,9 @@ public class ClusterJHopsFSAckTableTest {
                     RecordAttr postAttr = postAttrs[i];
                     RecordAttr preAttr = preAttrs[i];
 
+                    System.out.println("\t" + eventColumns[i] + " pre is " + preAttr.get_size_in_bytes() + " bytes");
+                    System.out.println("\t" + eventColumns[i] + " post is " + postAttr.get_size_in_bytes() + " bytes");
+
                     System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int64_value());
                     System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int64_value());
 

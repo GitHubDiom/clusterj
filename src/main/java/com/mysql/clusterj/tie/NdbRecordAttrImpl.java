@@ -83,7 +83,7 @@ public class NdbRecordAttrImpl implements RecordAttr {
     }
 
     public int get_size_in_bytes() {
-        return 0;
+        return ndbRecAttr.get_size_in_bytes();
     }
 
     public boolean isNULL() throws ClusterJException {
