@@ -10,10 +10,7 @@ import com.mysql.clusterj.core.util.Logger;
 import com.mysql.clusterj.core.util.LoggerFactoryService;
 import com.mysql.ndbjtie.ndbapi.NdbErrorConst;
 import com.mysql.ndbjtie.ndbapi.NdbEventOperation;
-import com.mysql.ndbjtie.ndbapi.NdbEventOperationConst;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
-
-import java.nio.ByteBuffer;
 
 public class NdbEventOperationImpl implements EventOperation {
     /** My message translator */

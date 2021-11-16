@@ -156,8 +156,6 @@ public class NdbRecordAttrImpl implements RecordAttr {
     public RecordAttr cloneNative() {
         NdbRecAttr ndbRecAttrCopy = ndbRecAttr.cloneNative();
 
-        ByteBuffer aValue = this.aValue.duplicate();
-
-        return new NdbRecordAttrImpl(ndbRecAttrCopy, this.tableName, aValue);
+        return new NdbRecordAttrImpl(ndbRecAttrCopy, this.tableName);
     }
 }
