@@ -165,21 +165,17 @@ public class NdbEventOperationImpl implements EventOperation {
     }
 
     public RecordAttr getValue(String anAttrName) {
-        ByteBuffer aValue = ByteBuffer.allocateDirect(64); // Big enough.
-
         logger.debug("Getting value for operation. Attribute name: " + anAttrName);
-        NdbRecAttr ndbRecAttr = ndbEventOperation.getValue(anAttrName, aValue);
+        NdbRecAttr ndbRecAttr = ndbEventOperation.getValue(anAttrName, null);
 
-        return new NdbRecordAttrImpl(ndbRecAttr, null, aValue);
+        return new NdbRecordAttrImpl(ndbRecAttr, null);
     }
 
     public RecordAttr getPreValue(String anAttrName) {
-        ByteBuffer aValue = ByteBuffer.allocateDirect(64); // Big enough.
-
         logger.debug("Getting pre-value for operation. Attribute name: " + anAttrName);
-        NdbRecAttr ndbRecAttr = ndbEventOperation.getPreValue(anAttrName, aValue);
+        NdbRecAttr ndbRecAttr = ndbEventOperation.getPreValue(anAttrName, null);
 
-        return new NdbRecordAttrImpl(ndbRecAttr, null, aValue);
+        return new NdbRecordAttrImpl(ndbRecAttr, null);
     }
 
     protected void handleError() {

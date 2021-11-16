@@ -65,13 +65,11 @@ public class NdbRecordAttrImpl implements RecordAttr {
             .getInstance(NdbRecordAttrImpl.class);
 
     private final NdbRecAttr ndbRecAttr;
-    private final ByteBuffer aValue;
     private final String tableName;
 
-    public NdbRecordAttrImpl(NdbRecAttr ndbRecAttr, String tableName, ByteBuffer aValue) {
+    public NdbRecordAttrImpl(NdbRecAttr ndbRecAttr, String tableName) {
         this.ndbRecAttr = ndbRecAttr;
         this.tableName = tableName;
-        this.aValue = aValue;
     }
 
     public Column getColumn() {
