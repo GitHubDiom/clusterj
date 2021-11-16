@@ -20,6 +20,8 @@ public interface RecordAttr {
      */
     int get_size_in_bytes();
 
+    byte[] getBytes();
+
     /**
      * Check if attribute value is NULL.
      *

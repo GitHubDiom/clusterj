@@ -6,6 +6,7 @@ import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class ClusterJHopsFSAckTableTest {
@@ -209,6 +210,9 @@ public class ClusterJHopsFSAckTableTest {
 
                     System.out.println("\t" + eventColumns[i] + " pre is " + preAttr.get_size_in_bytes() + " bytes");
                     System.out.println("\t" + eventColumns[i] + " post is " + postAttr.get_size_in_bytes() + " bytes");
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + Arrays.toString(preAttr.getBytes()));
+                    System.out.println("\t" + eventColumns[i] + " post: " + Arrays.toString(preAttr.getBytes()));
 
                     System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int64_value());
                     System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int64_value());
