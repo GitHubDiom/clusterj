@@ -20,9 +20,10 @@ public class ClusterJHopsFSAckTableTest {
      * Columns for which we want to see values for ACK events.
      */
     private static final String[] ACK_EVENT_COLUMNS = new String[] {
-            WriteAcknowledgementsTableDef.NAME_NODE_ID,       // bigint(20)
+            //WriteAcknowledgementsTableDef.NAME_NODE_ID,       // bigint(20)
+            //WriteAcknowledgementsTableDef.DEPLOYMENT_NUMBER,  // int(11)
             WriteAcknowledgementsTableDef.ACKNOWLEDGED,       // tinyint(4)
-            WriteAcknowledgementsTableDef.OPERATION_ID        // bigint(20)
+            //WriteAcknowledgementsTableDef.OPERATION_ID        // bigint(20)
     };
 
     private static final String[] INV_TABLE_EVENT_COLUMNS = new String[] {
