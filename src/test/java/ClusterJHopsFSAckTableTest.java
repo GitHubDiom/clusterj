@@ -45,27 +45,27 @@ public class ClusterJHopsFSAckTableTest {
 
         session.createAndRegisterEvent("inv_table_watch0", "invalidations_deployment0",
                 INV_TABLE_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         session.createAndRegisterEvent("inv_table_watch1", "invalidations_deployment1",
                 INV_TABLE_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         session.createAndRegisterEvent("inv_table_watch2", "invalidations_deployment2",
                 INV_TABLE_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         session.createAndRegisterEvent("ack_table_watch0", "write_acks_deployment0",
                 ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         session.createAndRegisterEvent("ack_table_watch1", "write_acks_deployment1",
                 ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         session.createAndRegisterEvent("ack_table_watch2", "write_acks_deployment2",
                 ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
-                false);
+                true);
 
         EventOperation eventOperation0 = session.createEventOperation("ack_table_watch0");
         EventOperation eventOperation1 = session.createEventOperation("ack_table_watch1");
@@ -189,8 +189,8 @@ public class ClusterJHopsFSAckTableTest {
                 else if (invEventOperation1.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch1!");
-                    postAttrs = event2PostRecordAttributesInv;
-                    preAttrs = event2PreRecordAttributesInv;
+                    postAttrs = event1PostRecordAttributesInv;
+                    preAttrs = event1PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation2.equals(nextEventOp)) {
