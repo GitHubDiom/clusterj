@@ -89,6 +89,8 @@ public class NdbRecordAttrImpl implements RecordAttr {
     public boolean isNULL() throws ClusterJException {
         int isNull = ndbRecAttr.isNULL();
 
+        System.out.println("isNull: " + isNull);
+
         if (isNull == 0)
             return true;
         else if (isNull == 1)
