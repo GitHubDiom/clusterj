@@ -93,10 +93,10 @@ public class NdbRecordAttrImpl implements RecordAttr {
 
         if (isNull == 0)
             return true;
-        else if (isNull == 1)
-            return false;
         else
-            throw new ClusterJException("Value is not yet defined.");
+            logger.warn("Record attribute is undefined.");
+
+        return false;
     }
 
     public long int64_value() {
