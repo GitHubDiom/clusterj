@@ -3,6 +3,7 @@ import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.tie.NdbEventOperationImpl;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 
+import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Properties;
@@ -93,8 +94,8 @@ public class ClusterJHopsFSAckTableTest {
 
         for (int i = 0; i < ACK_EVENT_COLUMNS.length; i++) {
             String eventColumnName = ACK_EVENT_COLUMNS[i];
-            NdbRecAttr postAttr0 = eventOperation0.getNdbEventOperation().getValue(eventColumnName, null);
-            NdbRecAttr preAttr0 = eventOperation0.getNdbEventOperation().getPreValue(eventColumnName, null);
+            NdbRecAttr postAttr0 = eventOperation0.getNdbEventOperation().getValue(eventColumnName, ByteBuffer.allocateDirect(256));
+            NdbRecAttr preAttr0 = eventOperation0.getNdbEventOperation().getPreValue(eventColumnName, ByteBuffer.allocateDirect(256));
             event0PostNdbRecAttributes[i] = postAttr0;
             event0PreNdbRecAttributes[i] = preAttr0;
 
