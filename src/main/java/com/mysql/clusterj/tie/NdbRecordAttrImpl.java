@@ -153,10 +153,6 @@ public class NdbRecordAttrImpl implements RecordAttr {
         return ndbRecAttr.double_value();
     }
 
-    public byte[] getBytes() {
-        return aValue.array();
-    }
-
     public RecordAttr cloneNative() {
         NdbRecAttr ndbRecAttrCopy = ndbRecAttr.cloneNative();
 
