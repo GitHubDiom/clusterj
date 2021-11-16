@@ -87,7 +87,7 @@ public class ClusterJHopsFSAckTableTest {
 //        NdbRecAttr[] event2PreNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
 //        NdbRecAttr[] event2PostNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
 
-        String dbugString = "d:t:L:F";
+        String dbugString = "d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log";
         Dbug dbug = ClusterJHelper.newDbug();
         dbug.push(dbugString);
 
