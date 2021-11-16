@@ -21,7 +21,6 @@ public class ClusterJHopsFSAckTableTest {
      */
     private static final String[] ACK_EVENT_COLUMNS = new String[] {
             WriteAcknowledgementsTableDef.NAME_NODE_ID,       // bigint(20)
-            WriteAcknowledgementsTableDef.DEPLOYMENT_NUMBER,  // int(11)
             WriteAcknowledgementsTableDef.ACKNOWLEDGED,       // tinyint(4)
             WriteAcknowledgementsTableDef.OPERATION_ID        // bigint(20)
     };
