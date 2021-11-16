@@ -3,7 +3,8 @@ import com.mysql.clusterj.Session;
 import com.mysql.clusterj.SessionFactory;
 import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.EventOperation;
-import com.mysql.clusterj.core.store.RecordAttr;
+import com.mysql.clusterj.tie.NdbEventOperationImpl;
+import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -67,62 +68,62 @@ public class ClusterJHopsFSAckTableTest {
                 ACK_EVENT_COLUMNS, new TableEvent[]{TableEvent.INSERT, TableEvent.UPDATE, TableEvent.DELETE}, 0,
                 true);
 
-        EventOperation eventOperation0 = session.createEventOperation("ack_table_watch0");
-        EventOperation eventOperation1 = session.createEventOperation("ack_table_watch1");
-        EventOperation eventOperation2 = session.createEventOperation("ack_table_watch2");
+        NdbEventOperationImpl eventOperation0 = (NdbEventOperationImpl)session.createEventOperation("ack_table_watch0");
+        NdbEventOperationImpl eventOperation1 = (NdbEventOperationImpl)session.createEventOperation("ack_table_watch1");
+        NdbEventOperationImpl eventOperation2 = (NdbEventOperationImpl)session.createEventOperation("ack_table_watch2");
 
-        EventOperation invEventOperation0 = session.createEventOperation("inv_table_watch0");
-        EventOperation invEventOperation1 = session.createEventOperation("inv_table_watch1");
-        EventOperation invEventOperation2 = session.createEventOperation("inv_table_watch2");
+        NdbEventOperationImpl invEventOperation0 = (NdbEventOperationImpl)session.createEventOperation("inv_table_watch0");
+        NdbEventOperationImpl invEventOperation1 = (NdbEventOperationImpl)session.createEventOperation("inv_table_watch1");
+        NdbEventOperationImpl invEventOperation2 = (NdbEventOperationImpl)session.createEventOperation("inv_table_watch2");
 
-        RecordAttr[] event0PreRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
-        RecordAttr[] event0PostRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
-        RecordAttr[] event1PreRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
-        RecordAttr[] event1PostRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
-        RecordAttr[] event2PreRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
-        RecordAttr[] event2PostRecordAttributes = new RecordAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event0PreNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event0PostNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event1PreNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event1PostNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event2PreNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
+        NdbRecAttr[] event2PostNdbRecAttributes = new NdbRecAttr[ACK_EVENT_COLUMNS.length];
 
-        RecordAttr[] event0PreRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
-        RecordAttr[] event0PostRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
-        RecordAttr[] event1PreRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
-        RecordAttr[] event1PostRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
-        RecordAttr[] event2PreRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
-        RecordAttr[] event2PostRecordAttributesInv = new RecordAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event0PreNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event0PostNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event1PreNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event1PostNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event2PreNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
+        NdbRecAttr[] event2PostNdbRecAttributesInv = new NdbRecAttr[INV_TABLE_EVENT_COLUMNS.length];
 
         for (int i = 0; i < ACK_EVENT_COLUMNS.length; i++) {
             String eventColumnName = ACK_EVENT_COLUMNS[i];
-            RecordAttr postAttr0 = eventOperation0.getValue(eventColumnName);
-            RecordAttr preAttr0 = eventOperation0.getPreValue(eventColumnName);
-            event0PostRecordAttributes[i] = postAttr0;
-            event0PreRecordAttributes[i] = preAttr0;
+            NdbRecAttr postAttr0 = eventOperation0.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr0 = eventOperation0.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event0PostNdbRecAttributes[i] = postAttr0;
+            event0PreNdbRecAttributes[i] = preAttr0;
 
-            RecordAttr postAttr1 = eventOperation1.getValue(eventColumnName);
-            RecordAttr preAttr1 = eventOperation1.getPreValue(eventColumnName);
-            event1PostRecordAttributes[i] = postAttr1;
-            event1PreRecordAttributes[i] = preAttr1;
+            NdbRecAttr postAttr1 = eventOperation1.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr1 = eventOperation1.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event1PostNdbRecAttributes[i] = postAttr1;
+            event1PreNdbRecAttributes[i] = preAttr1;
 
-            RecordAttr postAttr2 = eventOperation2.getValue(eventColumnName);
-            RecordAttr preAttr2 = eventOperation2.getPreValue(eventColumnName);
-            event2PostRecordAttributes[i] = postAttr2;
-            event2PreRecordAttributes[i] = preAttr2;
+            NdbRecAttr postAttr2 = eventOperation2.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr2 = eventOperation2.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event2PostNdbRecAttributes[i] = postAttr2;
+            event2PreNdbRecAttributes[i] = preAttr2;
         }
 
         for (int i = 0; i < INV_TABLE_EVENT_COLUMNS.length; i++) {
             String eventColumnName = INV_TABLE_EVENT_COLUMNS[i];
-            RecordAttr postAttr0 = invEventOperation0.getValue(eventColumnName);
-            RecordAttr preAttr0 = invEventOperation0.getPreValue(eventColumnName);
-            event0PostRecordAttributesInv[i] = postAttr0;
-            event0PreRecordAttributesInv[i] = preAttr0;
+            NdbRecAttr postAttr0 = invEventOperation0.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr0 = invEventOperation0.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event0PostNdbRecAttributesInv[i] = postAttr0;
+            event0PreNdbRecAttributesInv[i] = preAttr0;
 
-            RecordAttr postAttr1 = invEventOperation1.getValue(eventColumnName);
-            RecordAttr preAttr1 = invEventOperation1.getPreValue(eventColumnName);
-            event1PostRecordAttributesInv[i] = postAttr1;
-            event1PreRecordAttributesInv[i] = preAttr1;
+            NdbRecAttr postAttr1 = invEventOperation1.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr1 = invEventOperation1.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event1PostNdbRecAttributesInv[i] = postAttr1;
+            event1PreNdbRecAttributesInv[i] = preAttr1;
 
-            RecordAttr postAttr2 = invEventOperation2.getValue(eventColumnName);
-            RecordAttr preAttr2 = invEventOperation2.getPreValue(eventColumnName);
-            event2PostRecordAttributesInv[i] = postAttr2;
-            event2PreRecordAttributesInv[i] = preAttr2;
+            NdbRecAttr postAttr2 = invEventOperation2.getNdbEventOperation().getValue(eventColumnName, null);
+            NdbRecAttr preAttr2 = invEventOperation2.getNdbEventOperation().getPreValue(eventColumnName, null);
+            event2PostNdbRecAttributesInv[i] = postAttr2;
+            event2PreNdbRecAttributesInv[i] = preAttr2;
         }
 
         System.out.println("Executing ACK event operations.");
@@ -155,49 +156,49 @@ public class ClusterJHopsFSAckTableTest {
                 now = Instant.now();
                 System.out.println("\n\n[" + now.toString() + "] Event #" + eventCounter + ": " + eventType.name());
 
-                RecordAttr[] postAttrs = null;
-                RecordAttr[] preAttrs = null;
+                NdbRecAttr[] postAttrs = null;
+                NdbRecAttr[] preAttrs = null;
                 String[] eventColumns = null;
                 if (eventOperation0.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment0!");
-                    postAttrs = event0PostRecordAttributes;
-                    preAttrs = event0PreRecordAttributes;
+                    postAttrs = event0PostNdbRecAttributes;
+                    preAttrs = event0PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation1.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment1!");
-                    postAttrs = event1PostRecordAttributes;
-                    preAttrs = event1PreRecordAttributes;
+                    postAttrs = event1PostNdbRecAttributes;
+                    preAttrs = event1PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation2.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment2!");
-                    postAttrs = event2PostRecordAttributes;
-                    preAttrs = event2PreRecordAttributes;
+                    postAttrs = event2PostNdbRecAttributes;
+                    preAttrs = event2PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (invEventOperation0.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch0!");
-                    postAttrs = event0PostRecordAttributesInv;
-                    preAttrs = event0PreRecordAttributesInv;
+                    postAttrs = event0PostNdbRecAttributesInv;
+                    preAttrs = event0PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation1.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch1!");
-                    postAttrs = event1PostRecordAttributesInv;
-                    preAttrs = event1PreRecordAttributesInv;
+                    postAttrs = event1PostNdbRecAttributesInv;
+                    preAttrs = event1PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation2.equals(nextEventOp)) {
                     now = Instant.now();
                     System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch2!");
-                    postAttrs = event2PostRecordAttributesInv;
-                    preAttrs = event2PreRecordAttributesInv;
+                    postAttrs = event2PostNdbRecAttributesInv;
+                    preAttrs = event2PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else {
@@ -205,8 +206,8 @@ public class ClusterJHopsFSAckTableTest {
                 }
 
                 for (int i = 0; i < eventColumns.length; i++) {
-                    RecordAttr postAttr = postAttrs[i];
-                    RecordAttr preAttr = preAttrs[i];
+                    NdbRecAttr postAttr = postAttrs[i];
+                    NdbRecAttr preAttr = preAttrs[i];
 
                     System.out.println("\t" + eventColumns[i] + " pre isNULL: " + preAttr.isNULL());
                     System.out.println("\t" + eventColumns[i] + " post isNULL: " + postAttr.isNULL());
