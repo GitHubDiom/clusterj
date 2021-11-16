@@ -5,6 +5,7 @@ import com.mysql.clusterj.TableEvent;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.core.store.RecordAttr;
 
+import java.time.Instant;
 import java.util.Properties;
 
 public class ClusterJHopsFSAckTableTest {
@@ -142,50 +143,58 @@ public class ClusterJHopsFSAckTableTest {
                 continue;
             }
 
-            System.out.println("Found events!");
+            Instant now = Instant.now();
+            System.out.println("[" + now.toString() + "] Found events!");
 
             EventOperation nextEventOp = session.nextEvent();
 
             while (nextEventOp != null) {
                 TableEvent eventType = nextEventOp.getEventType();
 
-                System.out.println("\n\nEvent #" + eventCounter + ": " + eventType.name());
+                now = Instant.now();
+                System.out.println("\n\n[" + now.toString() + "] Event #" + eventCounter + ": " + eventType.name());
 
                 RecordAttr[] postAttrs = null;
                 RecordAttr[] preAttrs = null;
                 String[] eventColumns = null;
                 if (eventOperation0.equals(nextEventOp)) {
-                    System.out.println("Received ACK Event for table write_acks_deployment0!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment0!");
                     postAttrs = event0PostRecordAttributes;
                     preAttrs = event0PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation1.equals(nextEventOp)) {
-                    System.out.println("Received ACK Event for table write_acks_deployment1!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment1!");
                     postAttrs = event1PostRecordAttributes;
                     preAttrs = event1PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (eventOperation2.equals(nextEventOp)) {
-                    System.out.println("Received ACK Event for table write_acks_deployment2!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment2!");
                     postAttrs = event2PostRecordAttributes;
                     preAttrs = event2PreRecordAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
                 }
                 else if (invEventOperation0.equals(nextEventOp)) {
-                    System.out.println("Received INV Event for table inv_table_watch0!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch0!");
                     postAttrs = event0PostRecordAttributesInv;
                     preAttrs = event0PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation1.equals(nextEventOp)) {
-                    System.out.println("Received INV Event for table inv_table_watch1!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch1!");
                     postAttrs = event2PostRecordAttributesInv;
                     preAttrs = event2PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
                 }
                 else if (invEventOperation2.equals(nextEventOp)) {
-                    System.out.println("Received INV Event for table inv_table_watch2!");
+                    now = Instant.now();
+                    System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch2!");
                     postAttrs = event2PostRecordAttributesInv;
                     preAttrs = event2PreRecordAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
