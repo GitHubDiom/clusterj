@@ -207,8 +207,23 @@ public class ClusterJHopsFSAckTableTest {
                     RecordAttr postAttr = postAttrs[i];
                     RecordAttr preAttr = preAttrs[i];
 
-                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_32_value());
-                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_32_value() + "\n");
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int64_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int64_value());
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int32_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int32_value());
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int8_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int8_value());
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_8_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_8_value());
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_char_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_char_value());
+
+                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.char_value());
+                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.char_value() + "\n");
                 }
 
                 nextEventOp = session.nextEvent();
