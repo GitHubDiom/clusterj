@@ -2,11 +2,8 @@ import com.mysql.clusterj.*;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.tie.NdbEventOperationImpl;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
-import com.sun.deploy.util.StringUtils;
 
-import java.nio.ByteBuffer;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class ClusterJHopsFSAckTableTest {
