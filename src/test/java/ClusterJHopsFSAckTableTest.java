@@ -2,11 +2,14 @@ import com.mysql.clusterj.*;
 import com.mysql.clusterj.core.store.EventOperation;
 import com.mysql.clusterj.tie.NdbEventOperationImpl;
 import com.mysql.ndbjtie.ndbapi.NdbRecAttr;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.time.Instant;
 import java.util.Properties;
 
 public class ClusterJHopsFSAckTableTest {
+    private static final Log LOG = LogFactory.getLog(ClusterJHopsFSAckTableTest.class);
     private static final String DEFAULT_CONNECT_STRING = "10.241.64.15:1186";
     private static final String DEFAULT_DATABASE = "hop_bram_vm";
     private static final String DEFAULT_TABLE_NAME = "write_acks_deployment0";
@@ -82,18 +85,18 @@ public class ClusterJHopsFSAckTableTest {
     private static void printInvalidationEvent(EventOperation invEventOp, String eventName, Instant timeReceived,
                                                String tableName, NdbRecAttr[] preValues, NdbRecAttr[] postvalues,
                                                String[] eventColumns) {
-        System.out.println("=-=-=-=-=-=-=-=-=-=-=- INV RECEIVED =-=-=-=-=-=-=-=-=-=-=");
-        System.out.println("Event Name: " + eventName + ", Table Name: " + tableName);
-        System.out.println("Time Received: " + timeReceived);
-        System.out.println(eventColumns[0] + ": " + postvalues[0].int64_value());
-        System.out.println(eventColumns[1] + ": " + postvalues[1].int64_value());
-        System.out.println(eventColumns[2] + ": " + postvalues[2].int64_value());
-        System.out.println(eventColumns[3] + ": " + postvalues[3].int64_value());
-        System.out.println(eventColumns[4] + ": " + postvalues[4].int64_value());
-//        System.out.println(StringUtils.join(Arrays.asList(eventColumns), ", "));
+        LOG.debug("=-=-=-=-=-=-=-=-=-=-=- INV RECEIVED =-=-=-=-=-=-=-=-=-=-=");
+        LOG.debug("Event Name: " + eventName + ", Table Name: " + tableName);
+        LOG.debug("Time Received: " + timeReceived);
+        LOG.debug(eventColumns[0] + ": " + postvalues[0].int64_value());
+        LOG.debug(eventColumns[1] + ": " + postvalues[1].int64_value());
+        LOG.debug(eventColumns[2] + ": " + postvalues[2].int64_value());
+        LOG.debug(eventColumns[3] + ": " + postvalues[3].int64_value());
+        LOG.debug(eventColumns[4] + ": " + postvalues[4].int64_value());
+//        LOG.debug(StringUtils.join(Arrays.asList(eventColumns), ", "));
 //        System.out.printf(INV_EVENT_FORMAT, postvalues[0].int64_value(), postvalues[1].int64_value(),
 //                postvalues[2].int64_value(), postvalues[3].int64_value(), postvalues[4].int64_value());
-        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+        LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     }
 
     /**
@@ -109,14 +112,14 @@ public class ClusterJHopsFSAckTableTest {
     private static void printAcknowledgementEvent(EventOperation ackEventOp, String eventName, Instant timeReceived,
                                                   String tableName, NdbRecAttr[] preValues, NdbRecAttr[] postvalues,
                                                   String[] eventColumns) {
-        System.out.println("=-=-=-=-=-=-=-=-=-=-=- ACK RECEIVED =-=-=-=-=-=-=-=-=-=-=");
-        System.out.println("Event Name: " + eventName + ", Table Name: " + tableName);
-        System.out.println("Time Received: " + timeReceived);
-        System.out.println(eventColumns[0] + ": " + postvalues[0].int64_value());
-        System.out.println(eventColumns[1] + ": " + postvalues[1].int32_value());
-        System.out.println(eventColumns[2] + ": " + convert(postvalues[2].int8_value()));
-        System.out.println(eventColumns[3] + ": " + postvalues[3].int64_value());
-        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+        LOG.debug("=-=-=-=-=-=-=-=-=-=-=- ACK RECEIVED =-=-=-=-=-=-=-=-=-=-=");
+        LOG.debug("Event Name: " + eventName + ", Table Name: " + tableName);
+        LOG.debug("Time Received: " + timeReceived);
+        LOG.debug(eventColumns[0] + ": " + postvalues[0].int64_value());
+        LOG.debug(eventColumns[1] + ": " + postvalues[1].int32_value());
+        LOG.debug(eventColumns[2] + ": " + convert(postvalues[2].int8_value()));
+        LOG.debug(eventColumns[3] + ": " + postvalues[3].int64_value());
+        LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     }
 
     public static void main(String[] args) {
@@ -213,17 +216,17 @@ public class ClusterJHopsFSAckTableTest {
             event2PreNdbRecAttributesInv[i] = preAttr2;
         }
 
-        System.out.println("Executing ACK event operations.");
+        LOG.debug("Executing ACK event operations.");
         ackEventOp0.execute();
         ackEventOp1.execute();
         ackEventOp2.execute();
 
-        System.out.println("Executing INV event operations.");
+        LOG.debug("Executing INV event operations.");
         invEventOp0.execute();
         invEventOp1.execute();
         invEventOp2.execute();
 
-        System.out.println("Listening for events now...");
+        LOG.debug("Listening for events now...");
         int eventCounter = 0;
         while (true) {
             boolean foundEvents = session.pollEvents(1000, null);
@@ -233,7 +236,7 @@ public class ClusterJHopsFSAckTableTest {
             }
 
             Instant now = Instant.now();
-            System.out.println("[" + now.toString() + "] Found events!");
+//            LOG.debug("[" + now.toString() + "] Found events!");
 
             EventOperation nextEventOp = session.nextEvent();
 
@@ -241,14 +244,14 @@ public class ClusterJHopsFSAckTableTest {
                 TableEvent eventType = nextEventOp.getEventType();
 
                 now = Instant.now();
-                System.out.println("\n\n[" + now.toString() + "] Event #" + eventCounter + ": " + eventType.name());
+                LOG.debug("\n\n[" + now.toString() + "] Event #" + eventCounter + ": " + eventType.name());
 
                 NdbRecAttr[] postAttrs = null;
                 NdbRecAttr[] preAttrs = null;
                 String[] eventColumns = null;
                 if (ackEventOp0.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment0!");
+                    //LOG.debug("[" + now.toString() + "] Received ACK Event for table write_acks_deployment0!");
                     postAttrs = event0PostNdbRecAttributes;
                     preAttrs = event0PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
@@ -257,7 +260,7 @@ public class ClusterJHopsFSAckTableTest {
                 }
                 else if (ackEventOp1.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment1!");
+                    //LOG.debug("[" + now.toString() + "] Received ACK Event for table write_acks_deployment1!");
                     postAttrs = event1PostNdbRecAttributes;
                     preAttrs = event1PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
@@ -266,7 +269,7 @@ public class ClusterJHopsFSAckTableTest {
                 }
                 else if (ackEventOp2.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received ACK Event for table write_acks_deployment2!");
+                    //LOG.debug("[" + now.toString() + "] Received ACK Event for table write_acks_deployment2!");
                     postAttrs = event2PostNdbRecAttributes;
                     preAttrs = event2PreNdbRecAttributes;
                     eventColumns = ACK_EVENT_COLUMNS;
@@ -275,7 +278,7 @@ public class ClusterJHopsFSAckTableTest {
                 }
                 else if (invEventOp0.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch0!");
+                    //LOG.debug("[" + now.toString() + "] Received INV Event for table inv_table_watch0!");
                     postAttrs = event0PostNdbRecAttributesInv;
                     preAttrs = event0PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
@@ -284,7 +287,7 @@ public class ClusterJHopsFSAckTableTest {
                 }
                 else if (invEventOp1.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch1!");
+                    //LOG.debug("[" + now.toString() + "] Received INV Event for table inv_table_watch1!");
                     postAttrs = event1PostNdbRecAttributesInv;
                     preAttrs = event1PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
@@ -293,7 +296,7 @@ public class ClusterJHopsFSAckTableTest {
                 }
                 else if (invEventOp2.equals(nextEventOp)) {
                     now = Instant.now();
-                    //System.out.println("[" + now.toString() + "] Received INV Event for table inv_table_watch2!");
+                    //LOG.debug("[" + now.toString() + "] Received INV Event for table inv_table_watch2!");
                     postAttrs = event2PostNdbRecAttributesInv;
                     preAttrs = event2PreNdbRecAttributesInv;
                     eventColumns = INV_TABLE_EVENT_COLUMNS;
@@ -307,29 +310,29 @@ public class ClusterJHopsFSAckTableTest {
 //                    NdbRecAttr postAttr = postAttrs[i];
 //                    NdbRecAttr preAttr = preAttrs[i];
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre isNULL: " + preAttr.isNULL());
-//                    System.out.println("\t" + eventColumns[i] + " post isNULL: " + postAttr.isNULL());
+//                    LOG.debug("\t" + eventColumns[i] + " pre isNULL: " + preAttr.isNULL());
+//                    LOG.debug("\t" + eventColumns[i] + " post isNULL: " + postAttr.isNULL());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre size is " + preAttr.get_size_in_bytes() + " bytes");
-//                    System.out.println("\t" + eventColumns[i] + " post size is " + postAttr.get_size_in_bytes() + " bytes");
+//                    LOG.debug("\t" + eventColumns[i] + " pre size is " + preAttr.get_size_in_bytes() + " bytes");
+//                    LOG.debug("\t" + eventColumns[i] + " post size is " + postAttr.get_size_in_bytes() + " bytes");
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int64_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int64_value());
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.int64_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.int64_value());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int32_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int32_value());
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.int32_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.int32_value());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.int8_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.int8_value());
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.int8_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.int8_value());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_8_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_8_value());
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.u_8_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.u_8_value());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.u_char_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.u_char_value());
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.u_char_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.u_char_value());
 //
-//                    System.out.println("\t" + eventColumns[i] + " pre: " + preAttr.char_value());
-//                    System.out.println("\t" + eventColumns[i] + " post: " + postAttr.char_value() + "\n");
+//                    LOG.debug("\t" + eventColumns[i] + " pre: " + preAttr.char_value());
+//                    LOG.debug("\t" + eventColumns[i] + " post: " + postAttr.char_value() + "\n");
 //                }
                 nextEventOp = session.nextEvent();
                 eventCounter++;
