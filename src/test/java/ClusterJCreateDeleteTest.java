@@ -9,11 +9,11 @@ import java.util.Properties;
 
 public class ClusterJCreateDeleteTest {
 
-    private static final String DEFAULT_CONNECT_STRING = "10.241.64.15:1186";
-    private static final String DEFAULT_DATABASE = "ndb_examples";
+    private static final String DEFAULT_CONNECT_STRING = "172.17.8.101:1186";
+    private static final String DEFAULT_DATABASE = "Serverless";
     private static final String DEFAULT_TABLE_NAME = "t0";
     private static final String DEFAULT_EVENT_NAME = "MY_EVENT_t0";
-    private static final String DEFAULT_DEBUG_STRING = "d:t:L:F:o,/home/ubuntu/repos/clusterj/dbug.log";
+    private static final String DEFAULT_DEBUG_STRING = "d:t:L:F:o,/home/vagant/clusterj/dbug.log";
     private static final String DEFAULT_OPERATION = "create";
 
     private static final int DEFAULT_TIMEOUT = 30;

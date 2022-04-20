@@ -124,8 +124,8 @@ public class ClusterJHopsFSAckTableTest {
 
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.put("com.mysql.clusterj.connectstring", "10.241.64.15:1186");
-        props.put("com.mysql.clusterj.database", "hop_bram_vm");
+        props.put("com.mysql.clusterj.connectstring", "172.17.8.101:1186");
+        props.put("com.mysql.clusterj.database", "Serverless");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
         Session session = factory.getSession();
